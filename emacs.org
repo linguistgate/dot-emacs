@@ -60,6 +60,7 @@
     - [[#journal][Journal]]
     - [[#languages][Languages]]
     - [[#reading-list-management][Reading List Management]]
+    - [[#publishing][Publishing]]
     - [[#tagging][Tagging]]
     - [[#toc-org][Toc-org]]
   - [[#post-initialization][Post Initialization]]
@@ -621,6 +622,11 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 
 *** Reading List Management
 
+*** Publishing
+My publishing needs are changing a lot. This will fill out once I've decided on something that is reliable.
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-latex)
+#+END_SRC
 *** Tagging
 
 *** Toc-org
