@@ -493,6 +493,11 @@ load it when =swiper= or =swiper-all= is called.
 ** Navigation
 *** Uniquify
 *** Dired
+# (use-package dired-hacks-utils)
+# (use-package dired-filter)
+# (use-package dired-rainbow)
+# (use-package dired-narrow)
+# (use-package dired-collapse)
 ** Project Management
 Projectile is a quick and easy project management package that "just works". We're
 going to install it and make sure it's loaded immediately.
@@ -550,6 +555,18 @@ Ensure that src blocks in =org-mode= are sensitve to indentation norms.
 #+END_SRC
 
 *** Agenda
+
+My intent is for the agenda to be the central *digital* hub of my activities at work, home, and elsewhere. It "speaks" to be hipster planner. This is part of a concerted and meaningful effort to make sure my calendars are in my direct control. I use Google products to interface with colleagues, friends, and families who use it. It is not my center.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-agenda
+    :ensure nil
+    :after org
+    :custom
+    (org-agenda-files '("~/org/organizer.org"
+                        "~/org/areas/teaching/admin-tasks.org")))
+  
+#+END_SRC
 
 *** Bullets
 
