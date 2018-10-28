@@ -322,11 +322,11 @@ In order to prevent overlay, =owl/cycle-theme= depends on on two additional func
       (message "Unable to find theme file for ‘%s’" theme)))
 #+END_SRC
 
-The package =pretty-mode= redisplays parts of the Emacs buffer as pretty Unicode symbols. I have it turned on globally at present.
+The package =pretty-mode= redisplays parts of the Emacs buffer as pretty Unicode symbols. I have it turned off globally.
 
 #+BEGIN_SRC emacs-lisp
   (use-package pretty-mode)
-  (global-pretty-mode t)
+  (global-pretty-mode nil)
 #+END_SRC
 
 *** Aggressive Indent
@@ -564,7 +564,7 @@ My intent is for the agenda to be the central *digital* hub of my activities at 
     :after org
     :custom
     (org-agenda-files '("~/org/organizer.org"
-                        "~/org/areas/teaching/admin-tasks.org")))
+                        "~/areas/teaching/admin-tasks.org")))
   
 #+END_SRC
 
@@ -588,7 +588,6 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
             (tags-todo "@writing"))
            nil                      ;; i.e., no local settings
            ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
-          ;; ..other commands here
           ))
 
   (setq org-tag-alist '(("@home" . ?h)
