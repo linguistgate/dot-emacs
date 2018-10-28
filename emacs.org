@@ -251,8 +251,8 @@ Some core editing desirables:
 
 #+BEGIN_SRC emacs-lisp
   (setq-default truncate-lines t
-		indicate-empty-lines t
-		require-final-newline t)
+                indicate-empty-lines t
+                require-final-newline t)
 #+END_SRC
 
 *** Visual Appearance
