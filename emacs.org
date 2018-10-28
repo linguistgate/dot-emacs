@@ -568,6 +568,38 @@ My intent is for the agenda to be the central *digital* hub of my activities at 
   
 #+END_SRC
 
+I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-custom-commands
+        '(("g" . "GTD contexts")
+          ("go" "Office" tags-todo "@office")
+          ("gc" "Computer" tags-todo "@computer")
+          ("gp" "Phone" tags-todo "@phone")
+          ("gh" "Home" tags-todo "@home")
+          ("ge" "Errands" tags-todo "@errands")
+          ("gw" "Writing" tags-todo "@writing")
+          ("G" "GTD Block Agenda"
+           ((tags-todo "@office")
+            (tags-todo "@computer")
+            (tags-todo "@phone")
+            (tags-todo "@home")
+            (tags-todo "@errands")
+            (tags-todo "@writing"))
+           nil                      ;; i.e., no local settings
+           ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
+          ;; ..other commands here
+          ))
+
+  (setq org-tag-alist '(("@home" . ?h)
+                        ("@office" . ?o)
+                        ("@computer" .?c)
+                        ("@phone" . ?p)
+                        ("@email" . ?m)
+                        ("@writing" . ?w)
+                        ("@errands" . ?e)))
+#+END_SRC
+
 *** Bullets
 
 #+BEGIN_SRC emacs-lisp
