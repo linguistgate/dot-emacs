@@ -555,6 +555,13 @@ Ensure that src blocks in =org-mode= are sensitve to indentation norms.
   (setq org-src-tab-acts-natively t)
 #+END_SRC
 
+I define my default =org-directory= as =~/org=. It must be symlinked to home directory from whatever cloud-based service is helping me with backup.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/org")
+#+END_SRC
+
+
 *** Agenda
 
 My intent is for the agenda to be the central *digital* hub of my activities at work, home, and elsewhere. It "speaks" to be hipster planner. This is part of a concerted and meaningful effort to make sure my calendars are in my direct control. I use Google products to interface with colleagues, friends, and families who use it. It is not my center.
