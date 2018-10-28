@@ -1,39 +1,77 @@
 #+TITLE: Emacs Literate Configuration
-#+AUTHOR: Your Name Here
+#+AUTHOR: Matthew Edward Adams 
 #+PROPERTY: header-args :tangle yes
+#+STARTUP: indent
 
 * Configuration
 :PROPERTIES:
 :VISIBILITY: children
 :END:
 
-** Table of Contents :TOC_3_gh:
+** Table of Contents :TOC_5_gh:
 - [[#configuration][Configuration]]
-  - [[#about-this-file][About this file]]
-  - [[#org-file-tweaks][Org File Tweaks]]
+  - [[#about-this-file][About This File]]
+  - [[#config-file-tweaks][Config File Tweaks]]
     - [[#automatically-tangle][Automatically Tangle]]
+    - [[#reload-configuation][Reload Configuation]]
     - [[#visibility-settings][Visibility Settings]]
     - [[#table-of-contents][Table of Contents]]
   - [[#personal-information][Personal Information]]
   - [[#emacs-initialization][Emacs Initialization]]
-    - [[#settings][Settings]]
+    - [[#garbage-collection][Garbage Collection]]
+    - [[#byte-compilation][Byte Compilation]]
+    - [[#startup-behavior][Startup Behavior]]
+    - [[#directory-structure][Directory Structure]]
     - [[#package-management][Package Management]]
-  - [[#packages][Packages]]
-    - [[#evil][Evil]]
+      - [[#package-settings][Package Settings]]
+      - [[#use-package-settings][Use-Package Settings]]
+      - [[#manually-set-load-path][Manually Set Load Path]]
+      - [[#initialize-package-management][Initialize Package Management]]
+  - [[#global-defaults][Global Defaults]]
+    - [[#core-editing][Core Editing]]
+    - [[#visual-appearance][Visual Appearance]]
+    - [[#font-management][Font Management]]
+      - [[#font-locking][Font Locking]]
+      - [[#default-fonts][Default Fonts]]
+    - [[#theme-management][Theme Management]]
+    - [[#aggressive-indent][Aggressive Indent]]
+  - [[#accessibility][Accessibility]]
+    - [[#hinting][Hinting]]
+    - [[#hydra][Hydra]]
+    - [[#ace-window][Ace Window]]
+    - [[#autocompletion][Autocompletion]]
     - [[#ivy][Ivy]]
     - [[#counsel][Counsel]]
     - [[#swiper][Swiper]]
-    - [[#magit][Magit]]
-    - [[#projectile][Projectile]]
-    - [[#org][Org]]
+  - [[#navigation][Navigation]]
+    - [[#uniquify][Uniquify]]
+    - [[#dired][Dired]]
+  - [[#project-management][Project Management]]
+    - [[#version-control][Version Control]]
+      - [[#backups][Backups]]
+      - [[#magit][Magit]]
+  - [[#org-mode][Org-Mode]]
+    - [[#agenda][Agenda]]
+    - [[#bullets][Bullets]]
+    - [[#capture-and-refile][Capture and Refile]]
+    - [[#clock][Clock]]
+    - [[#contacts][Contacts]]
+    - [[#encryption][Encryption]]
+    - [[#journal][Journal]]
+    - [[#languages][Languages]]
+    - [[#reading-list-management][Reading List Management]]
+    - [[#tagging][Tagging]]
     - [[#toc-org][Toc-org]]
   - [[#post-initialization][Post Initialization]]
 
-** About this file
-This is an Emacs literate configuration template. It contains the basic structure
-of a literate config along with some optimizations to ensure a fast load time.
+** About This File
+This is a rebuild and refactoring of my Emacs configuration using literate programming techniques.
 
-** Org File Tweaks
+All of my configuration is stored here (no requiring and providing of subfiles) at present.
+
+It contains some optimization for byte-compiling to ensure a faster load time.
+
+** Config File Tweaks
 There are a few tweaks included in this org file that make it a little easier to
 work with.
 
@@ -48,6 +86,16 @@ This tells emacs to automatically tangle (include) all code blocks in this file 
 generating the code for the config, unless the code block explicitly includes
 =:tangle no= as the above code block does.
 
+*** Reload Configuation
+Reload my configuration from inside of =org-mode= and assign custom function to =C-c r=.
+#+BEGIN_SRC emacs-lisp
+  (defun owl/config-reload ()
+    "Reloads ~/.emacs.d/emacs.org at runtime."
+    (interactive)
+    (org-babel-load-file (expand-file-name "~/.emacs.d/emacs.org")))
+
+  (global-set-key (kbd "C-c r") 'owl/config-reload)
+#+END_SRC
 *** Visibility Settings
 Next we have a property defined on the [[Configuration][Configuration]] heading that defines the visibility
 that tells org to show it's direct children on startup. This way a clean outline of all
@@ -61,32 +109,64 @@ is updated everytime the file is saved and makes for a functional table of conte
 works property directly on github.
 
 ** Personal Information
-Let's set some variables with basic user information.
+
+Some basic values:
 
 #+BEGIN_SRC emacs-lisp
-(setq user-full-name "Your Name Here"
-      user-mail-address "user@email.com")
+  (setq user-full-name "Matthew Edward Adams"
+	user-mail-address "m2eadams@gmail.com")
 #+END_SRC
 
 ** Emacs Initialization
 
-*** Settings
-We're going to increase the gc-cons-threshold to a very high number to decrease the load and compile time.
-We'll lower this value significantly after initialization has completed. We don't want to keep this value
+*** Garbage Collection
+I increase the gc-cons-threshold to a very high number to decrease the load and compile time.
+I'll lower this value significantly after initialization has completed. I don't want to keep this value
 too high or it will result in long GC pauses during normal usage.
 
 #+BEGIN_SRC emacs-lisp
-(eval-and-compile
-  (setq gc-cons-threshold 402653184
-        gc-cons-percentage 0.6))
+  (eval-and-compile
+    (setq gc-cons-threshold 402653184
+	  gc-cons-percentage 0.6))
 #+END_SRC
+
+*** Byte Compilation
 
 Disable certain byte compiler warnings to cut down on the noise. This is a personal choice and can be removed
 if you would like to see any and all byte compiler warnings.
 
 #+BEGIN_SRC emacs-lisp
-(setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
+  (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
 #+END_SRC
+
+*** Startup Behavior
+
+When we startup, we want a minimal Emacs layout: no startup screen, no toolbar, no scrollbar, and no menubar.
+
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-screen t)
+  (tool-bar-mode 0)
+  (menu-bar-mode 0)
+  (scroll-bar-mode -1)
+#+END_SRC
+
+*** Directory Structure
+
+Set the directory where the Emacs configuration is installed.
+
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+
+Set the user directory to =.emacs.d/user=.
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+The default ELPA package directory is =.emacs.d/elpa=. User-defined or non-listed packages should be situated in =./user= directory.
+
+Custom themes should be stored 
+
 
 *** Package Management
 
@@ -100,9 +180,9 @@ to not automatically call it on our behalf. Additionally we're setting
 #+BEGIN_SRC emacs-lisp
   (eval-and-compile
     (setq load-prefer-newer t
-          package-user-dir "~/.emacs.d/elpa"
-          package--init-file-ensured t
-          package-enable-at-startup nil)
+	  package-user-dir "~/.emacs.d/elpa"
+	  package--init-file-ensured t
+	  package-enable-at-startup nil)
 
     (unless (file-directory-p package-user-dir)
       (make-directory package-user-dir t)))
@@ -114,7 +194,7 @@ initialization significantly as many packages are only loaded later when they ar
 
 #+BEGIN_SRC emacs-lisp
   (setq use-package-always-defer t
-        use-package-verbose t)
+	use-package-verbose t)
 #+END_SRC
 
 **** Manually Set Load Path
@@ -146,9 +226,9 @@ previously compiled manually then all of the package initialization will still t
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile
     (require 'package)
-
+  
     (unless (assoc-default "melpa" package-archives)
-      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
     (unless (assoc-default "org" package-archives)
       (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
 
@@ -160,94 +240,356 @@ previously compiled manually then all of the package initialization will still t
     (setq use-package-always-ensure t))
 #+END_SRC
 
+** Global Defaults
+*** Core Editing
 
-** Packages
+Some core editing desirables:
 
-*** Evil
-Install, automatically load, and enable evil. It's like vim, but better!
+- The variable =truncate-lines= turns off wrapping. Long lines will show a continuation character in the right margin.
+- To indicate the presence of empty lines at the end of a file, a marker is placed in the left fringe.
+- I require final newlines globally.
 
 #+BEGIN_SRC emacs-lisp
-(use-package evil
-  :demand t
+  (setq-default truncate-lines t
+		indicate-empty-lines t
+		require-final-newline t)
+#+END_SRC
+
+*** Visual Appearance
+*** Font Management
+**** Font Locking
+Turn on font locking everywhere. Explain what font locking is.
+#+BEGIN_SRC emacs-lisp
+  (global-font-lock-mode t)
+#+END_SRC
+**** Default Fonts
+The default fonts need to be installed at least for the relevant user under =~/.fonts=. I currently use the Input series of fonts.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'default-frame-alist '(font . "Input Mono 10" ))
+  (set-face-attribute 'default t :font "Input Mono 10" )
+  (set-face-attribute 'variable-pitch nil :family "Input")
+#+END_SRC
+*** Theme Management
+
+Ensure that variable pitches are respected in loaded themes:
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook
+	    (lambda ()
+	      (variable-pitch-mode 1)))
+#+END_SRC
+
+Ensure that some common theme packages are installed through ELPA and configured according to creator recommendations. Currently, I am installing the =doom= suite and the =flatui-dark-theme=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flatui-dark-theme)
+
+  (use-package doom-themes
+    :config (setq doom-themes-enable-bold t
+		  doom-themes-enable-italic t)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+#+END_SRC
+
+Establish a rotating index of themes:
+
+#+BEGIN_SRC emacs-lisp
+  (setq owl/themes '(leuven doom-one doom-nord-light doom-dracula doom-molokai flatui-dark))
+  (setq owl/themes-index 0)
+#+END_SRC
+
+I then define a function to cycle through the index of themes and assign it to =<f12>= globally.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Function to cycle through themes
+  (defun owl/cycle-theme ()
+    (interactive)
+    (setq owl/themes-index (% (1+ owl/themes-index) (length owl/themes)))
+    (owl/load-indexed-theme))
+
+  (global-set-key (kbd "<f12>") 'owl/cycle-theme)
+#+END_SRC
+
+In order to prevent overlay, =owl/cycle-theme= depends on on two additional functions:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/load-indexed-theme ()
+    (owl/try-load-theme (nth owl/themes-index owl/themes)))
+
+  (defun owl/try-load-theme (theme)
+    (if (ignore-errors (load-theme theme :no-confirm))
+	(mapcar #'disable-theme (remove theme custom-enabled-themes))
+      (message "Unable to find theme file for ‘%s’" theme)))
+#+END_SRC
+
+The package =pretty-mode= redisplays parts of the Emacs buffer as pretty Unicode symbols. I have it turned on globally at present.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package pretty-mode)
+  (global-pretty-mode t)
+#+END_SRC
+
+*** Aggressive Indent
+
+The package reindents code after every change, making it purportedly more reliable than =electric-indent-mode=.
+
+Because I mainly use Lisp and Python, I want aggressive indenting to be specific to =emacs-lisp-mode= so I activate it via hook.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package aggressive-indent
+    :config (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+#+END_SRC
+** Accessibility
+*** Hinting
+
+Remembering custom functions ...
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/remember-all-custom-functions ()
+    "Function to format a simple table with all custom functions that I created."
+    (let* ((custom-list (apropos-internal "^owl/"))
+	   (func-list (seq-filter 'functionp custom-list))
+	   (docs (mapcar 'documentation func-list))
+	   (docs-nnil (mapcar #'(lambda (el) (if el el "There isn't docstrings to this function! Shame!")) docs))
+	   (docs-fmt (mapcar #'(lambda (el) (string-join (split-string el "\n") " ")) docs-nnil))
+	   (res '()))
+      (dotimes (index (length func-list))
+	(push `(,(nth index func-list) ,(nth index docs-fmt)) res))
+      res))
+#+END_SRC
+
+My use of the =which-key= package ...
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :diminish which-key-mode
+  :init
+  (which-key-mode)
+  (which-key-setup-side-window-right-bottom)
+  (setq which-key-max-description-length 60))
+#+END_SRC
+
+The =helpful= package allows 
+
+#+BEGIN_SRC 
+(use-package helpful
+  :bind
+  ("C-h f" . helpful-function)
+  ("C-h x" . helpful-command)
+  ("C-h z" . helpful-macro))
+#+END_SRC
+*** Hydra
+Hydra allows me to display a list of all the commands implemented in the echo area and easily interact with them.
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :init
+  (setq hydra-is-helpful t)
   :config
-  (evil-mode 1))
+  (require 'hydra-ox))
+#+END_SRC
+I like a hydra to help me increase or decrease text scale in a given buffer:
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-zoom (global-map "<f6>")
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out") 
+  ("r" (text-scale-set 0) "reset")
+  ("0" (text-scale-set 0) :bind nil :exit t)
+  ("1" (text-scale-set 0) nil :bind nil :exit t))
+#+END_SRC
+*** Ace Window
+
+See http://bnbeckwith.com/bnb-emacs/ for supercharged variant on C-x o traversal.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :demand t
+    :bind
+    ("<f9> a" . ace-window)
+    :config
+    (setq aw-keys '(?j ?k ?l ?n ?m)
+	  aw-leading-char-style 'path
+	  aw-dispatch-always t
+	  aw-dispatch-alist
+	  '((?x aw-delete-window "Ace - Delete Window")
+	    (?c aw-swap-window   "Ace - Swap window")
+	    (?n aw-flip-window   "Ace - Flip window")
+	    (?v aw-split-window-vert "Ace - Split Vert Window")
+	    (?h aw-split-window-horz "Ace - Split Horz Window")
+	    (?m delete-other-windows "Ace - Maximize Window")
+	    (?b balance-windows)))
+
+    (set-face-attribute 'aw-leading-char-face nil :height 2.0)
+  )
+#+END_SRC
+
+Manipulate window size with a hydra.
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-window-size (:color amaranth)
+    "Window size"
+    ("h" shrink-window-horizontally "shrink horizontal")
+    ("j" shrink-window "shrink vertical")
+    ("k" enlarge-window "enlarge vertical")
+    ("l" enlarge-window-horizontally "enlarge horizontal")
+    ("q" nil "quit"))
+  (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+#+END_SRC
+
+*** Autocompletion
+
+Package =auto-complete= works very well for some IDE-like behaviors.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+    :diminish auto-complete-mode
+    :config (ac-config-default))
 #+END_SRC
 
 *** Ivy
-Generic completion frontend that's just awesome! Let's install and enable it.
-
 #+BEGIN_SRC emacs-lisp
-(use-package ivy
-  :demand t)
-#+END_SRC
+  (use-package ivy
+    :demand t
+    :diminish (ivy-mode . "")
+    :bind
+    (:map ivy-mode-map
+	  ("C-'" . ivy-avy))
+    :config
+    (ivy-mode 1)
+    ;;*** Find file actions
+    ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+    (setq ivy-use-virtual-buffers t)
+    ;; number of result lines to display
+    (setq ivy-height 10)
+    ;; does not count candidates
+    (setq ivy-count-format "")
+    ;; no regexp by default
+    (setq ivy-initial-inputs-alist nil)
+    ;; configure regexp engine
+    (setq ivy-re-builders-alist
+	  ;; allow input not in order
+	  '((t . ivy--regex-ignore-order))))
 
+  (use-package ivy-hydra)
+
+#+END_SRC
 *** Counsel
 Counsel allows us to utilize ivy by replacing many built-in and common functions
 with richer versions. Let's install it!
 
 #+BEGIN_SRC emacs-lisp
-(use-package counsel-projectile)
-(use-package counsel
-  :demand t)
+  (use-package counsel-projectile)
+  (use-package counsel
+    :demand t)
 #+END_SRC
-
 *** Swiper
 Swiper is an awesome searching utility with a quick preview. Let's install it and
 load it when =swiper= or =swiper-all= is called.
 
 #+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :commands (swiper swiper-all))
+  (use-package swiper
+    :commands (swiper swiper-all))
 #+END_SRC
 
-*** Magit
-The magical git client. Let's load magit only when one of the several entry pont
-functions we invoke regularly outside of magit is called.
-
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :commands (magit-status magit-blame magit-log-buffer-file magit-log-all))
-#+END_SRC
-
-*** Projectile
+** Navigation
+*** Uniquify
+*** Dired
+** Project Management
 Projectile is a quick and easy project management package that "just works". We're
 going to install it and make sure it's loaded immediately.
 
 #+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :demand t)
+  (use-package projectile
+    :demand t)
 #+END_SRC
 
-*** Org
-Let's include a newer version of org-mode than the one that is built in. We're going
-to manually remove the org directories from the load path, to ensure the version we
+*** Version Control
+**** Backups
+
+The following defaults allow for a saner backup system with Emacs files.
+
+#+BEGIN_SRC emacs-lisp
+  (setq backup-by-copying t
+        create-lockfiles nil
+        backup-directory-alist '((".*" . "~/.saves"))
+        delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
+#+END_SRC
+**** Magit
+Magit is ...
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :init (setq magit-completing-read-function 'ivy-completing-read)
+    :bind
+    ("<f5>" . magit-status)
+    ("C-c v t" . magit-status))
+#+END_SRC
+
+** Org-Mode
+
+Include the newer version of org-mode, favoring over the built-in one. Manually remove the org directories from the load path, to ensure the version we
 want is prioritized instead.
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  :ensure org-plus-contrib
-  :pin org
-  :defer t)
+  (use-package org
+    :ensure org-plus-contrib
+    :pin org
+    :defer t)
 
-;; Ensure ELPA org is prioritized above built-in org.
-(require 'cl)
-(setq load-path (remove-if (lambda (x) (string-match-p "org$" x)) load-path))
+  ;; Ensure ELPA org is prioritized above built-in org.
+  (require 'cl)
+  (setq load-path (remove-if (lambda (x) (string-match-p "org$" x)) load-path))
 #+END_SRC
+
+Ensure that src blocks in =org-mode= are sensitve to indentation norms.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-tab-acts-natively t)
+#+END_SRC
+
+*** Agenda
+
+*** Bullets
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
+#+END_SRC
+
+*** Capture and Refile
+
+*** Clock
+
+*** Contacts
+
+*** Encryption
+
+*** Journal
+
+*** Languages
+
+*** Reading List Management
+
+*** Tagging
 
 *** Toc-org
-Let's install and load the =toc-org= package after org mode is loaded. This is the
-package that automatically generates an up to date table of contents for us.
+ Let's install and load the =toc-org= package after org mode is loaded. This is the
+ package that automatically generates an up to date table of contents for us.
 
-#+BEGIN_SRC emacs-lisp
-(use-package toc-org
-  :after org
-  :init (add-hook 'org-mode-hook #'toc-org-enable))
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+   (use-package toc-org
+     :after org
+     :init (add-hook 'org-mode-hook #'toc-org-enable))
+ #+END_SRC
 
 ** Post Initialization
-Let's lower our GC thresholds back down to a sane level.
+ Let's lower our GC thresholds back down to a sane level.
 
-#+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold 16777216
-      gc-cons-percentage 0.1)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+   (setq gc-cons-threshold 16777216
+	 gc-cons-percentage 0.1)
+ #+END_SRC 
+l
