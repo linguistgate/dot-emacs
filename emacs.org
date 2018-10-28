@@ -500,6 +500,7 @@ load it when =swiper= or =swiper-all= is called.
 # (use-package dired-narrow)
 # (use-package dired-collapse)
 ** Project Management
+
 Projectile is a quick and easy project management package that "just works". We're
 going to install it and make sure it's loaded immediately.
 
@@ -616,6 +617,79 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 #+END_SRC
 
 *** Capture and Refile
+
+Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package org-capture
+      :ensure nil
+      :after org
+      :preface
+      (defvar owl/org-basic-task-template "* TODO %^{Task}
+    :PROPERTIES:
+    :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
+    :END:
+    Captured %<%Y-%m-%d %H:%M>" "Template for basic task.")
+
+      (defvar owl/org-contacts-template "* %(org-contacts-template-name)
+    :PROPERTIES:
+    :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+    :BIRTHDAY: %^{yyyy-mm-dd}
+    :EMAIL: %(org-contacts-template-email)
+    :NOTE: %^{NOTE}
+    :END:" "Template for org-contacts.")
+
+      (setq org-capture-templates `(("t"                                                                         ; key
+                                     "todo"                                                                      ; description
+                                     entry                                                                       ; type
+                                     (file+headline ,org-default-notes-file "Deck")                              ; target
+                                     "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
+                                     :prepend nil          ; properties
+                                     :empty-lines 0        ; properties
+                                     :created t            ; properties
+                                     )
+                                    ("n"
+                                     "note"
+                                     entry
+                                     (file+headline ,org-default-notes-file "Notes")
+                                     "* %? :NOTE:\n:LOGBOOK:\n:CREATED: %U\n:END:"
+                                     :prepend nil
+                                     :empty-lines 0
+                                     :created t
+                                     )
+                                    ("j"
+                                     "notebook entry"
+                                     entry
+                                     (file+datetree "~/org/notebook/notebook.org")
+                                     "* %?"
+                                     :empty-lines 1
+                                     )
+                                    ("r"
+                                     "recipe"
+                                     entry
+                                     (file+headline "~/org/food.org" "Recipes")
+                                     "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
+                                     :prepend nil
+                                     :empty-lines 0
+                                     :created t
+                                     )				
+                                    ("e"
+                                     "elfeed"
+                                     entry
+                                     (file "~/org/captures/captures.org")
+                                     "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
+                                     :prepend nil
+                                     :empty-lines 0
+                                     :created t
+                                     )
+                                    ("p" "Protocol" entry (file "~/org/captures/captures.org")
+                                     "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                    ("L" "Protocol Link" entry (file "~/org/captures/captures.org")
+                                     "* %? [[%:link][%:description]] \nCaptured On: %U")				
+                                    )
+            )
+  )
+#+END_SRC
 
 *** Clock
 
