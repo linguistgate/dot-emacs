@@ -580,11 +580,9 @@ Establish some meaningful defaults for =org-mode=:
 When t, Org prompts the user for confirmation before executing each code block. When nil, Org executes code blocks without prompting the user for confirmation. When this option is set to a custom function, Org invokes the function with these two arguments: the source code language and the body of the code block. The custom function must return either a t or nil, which determines if the user is prompted. Each source code language can be handled separately through this function argument. 
 #+END_QUOTE
 - =org-confirm-elisp-link-function= :: No need to prompt me before executing an Emacs Lisp link
-#+BEGIN_QUOTE
-Function that prompts the user before executing an Emacs Lisp link. 
-#+END_QUOTE
--  
-- 
+- =org-log-done= ::   
+- =org-hide-emphasis-markers= :: Remove markup characters and display closer to output.
+- =org-return-follows-link= :: Yes, please!
 
 #+BEGIN_SRC emacs-lisp
   (setq-default org-confirm-babel-evaluate nil
