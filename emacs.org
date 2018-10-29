@@ -51,6 +51,8 @@
       - [[#backups][Backups]]
       - [[#magit][Magit]]
   - [[#org-mode][Org-Mode]]
+      - [[#org-defaults][Org Defaults]]
+      - [[#org-modules][Org Modules]]
     - [[#agenda][Agenda]]
     - [[#bullets][Bullets]]
     - [[#capture-and-refile][Capture and Refile]]
@@ -246,14 +248,21 @@ previously compiled manually then all of the package initialization will still t
 
 Some core editing desirables:
 
-- The variable =truncate-lines= turns off wrapping. Long lines will show a continuation character in the right margin.
+- The variable =truncate-lines= turns off wrapping. Long lines will show a continuation character in the right margin. /It is currenlty set to nil./
+- I set =visual-line-mode= to apply in text modes and LaTeX buffers.
 - To indicate the presence of empty lines at the end of a file, a marker is placed in the left fringe.
 - I require final newlines globally.
 
 #+BEGIN_SRC emacs-lisp
-  (setq-default truncate-lines t
-                indicate-empty-lines t
-                require-final-newline t)
+    (setq-default truncate-lines nil
+                  indicate-empty-lines t
+                  require-final-newline t)
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode 1)))
+
+  (add-hook 'LaTeX-mode-hook #'visual-line-mode)
 #+END_SRC
 
 *** Visual Appearance
@@ -524,7 +533,8 @@ The following defaults allow for a saner backup system with Emacs files.
         version-control t)
 #+END_SRC
 **** Magit
-Magit is ...
+
+Free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -562,6 +572,36 @@ I define my default =org-directory= as =~/org=. It must be symlinked to home dir
   (setq org-directory "~/org")
 #+END_SRC
 
+**** Org Defaults
+
+Establish some meaningful defaults for =org-mode=: 
+- =org-confirm-babel-evaluate= :: No need to confirm babel evaluations of code.
+#+BEGIN_QUOTE
+When t, Org prompts the user for confirmation before executing each code block. When nil, Org executes code blocks without prompting the user for confirmation. When this option is set to a custom function, Org invokes the function with these two arguments: the source code language and the body of the code block. The custom function must return either a t or nil, which determines if the user is prompted. Each source code language can be handled separately through this function argument. 
+#+END_QUOTE
+- =org-confirm-elisp-link-function= :: No need to prompt me before executing an Emacs Lisp link
+#+BEGIN_QUOTE
+Function that prompts the user before executing an Emacs Lisp link. 
+#+END_QUOTE
+-  
+- 
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default org-confirm-babel-evaluate nil
+                org-confirm-elisp-link-function nil
+                org-enforce-todo-dependencies t
+                org-log-done t
+                org-hide-emphasis-markers t ; remove the markup characters
+                org-return-follows-link t)
+#+END_SRC
+
+**** Org Modules
+
+The package =org-protocol= allows for capturing webpages and links while browsing and importing that into predefined capture templates. It should be set as part of =org-modules=. The (built-in) package allows 
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-modules (quote (org-protocol)))
+#+END_SRC
 
 *** Agenda
 
