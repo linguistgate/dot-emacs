@@ -62,6 +62,7 @@
     - [[#journal][Journal]]
     - [[#languages][Languages]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
+  - [[#shave][Shave]]
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
     - [[#toc-org][Toc-org]]
@@ -170,7 +171,6 @@ The default ELPA package directory is =.emacs.d/elpa=. User-defined or non-liste
 
 Custom themes should be stored 
 
-
 *** Package Management
 
 **** Package Settings
@@ -266,17 +266,23 @@ Some core editing desirables:
 *** Visual Appearance
 *** Font Management
 **** Font Locking
+
 At present I have font locking turned on everywhere. Font Lock mode is a minor mode, always local to a particular buffer, and each buffer's major made tells Font Lock mode which text to fontify (add faces to). A programming language, for instance, will have rules about fontifying syntactically relevant constructs like comments, strings, and function names (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html][the GNU Emacs manual]]).
+
 #+BEGIN_SRC emacs-lisp
   (global-font-lock-mode t)
 #+END_SRC
+
 **** Default Fonts
+
 The default fonts need to be installed at least for the relevant user under =~/.fonts=. I currently use the Input series of fonts.
+
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist '(font . "Input Mono 10" ))
   (set-face-attribute 'default t :font "Input Mono 10" )
   (set-face-attribute 'variable-pitch nil :family "Input")
 #+END_SRC
+
 *** Theme Management
 
 Ensure that variable pitches are respected in loaded themes:
@@ -808,6 +814,16 @@ To create a habit, you need two things:
 
 1. A SCHEDULED tag with a repeat specification (like .+ or ++), and
 2. A STYLE property set to the value habit.
+
+#+BEGIN_EXAMPLE
+** TODO Shave
+   SCHEDULED: <2009-10-17 Sat .+2d/4d>
+   :PROPERTIES:
+   :STYLE:    habit
+   :LAST_REPEAT: [2009-10-19 Mon 00:36]
+   :END:
+#+END_EXAMPLE
+
 
 #+END_QUOTE
 
