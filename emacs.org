@@ -61,6 +61,7 @@
     - [[#encryption][Encryption]]
     - [[#journal][Journal]]
     - [[#languages][Languages]]
+    - [[#habits-org-habit][Habits (=org-habit=)]]
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
     - [[#toc-org][Toc-org]]
@@ -184,7 +185,7 @@ to not automatically call it on our behalf. Additionally we're setting
     (setq load-prefer-newer t
 	  package-user-dir "~/.emacs.d/elpa"
 	  package--init-file-ensured t
-	  package-enable-at-startup nil)
+	  package-enable-at-startup t)
 
     (unless (file-directory-p package-user-dir)
       (make-directory package-user-dir t)))
@@ -195,7 +196,7 @@ Tell =use-package= to always defer loading packages unless explicitly told other
 initialization significantly as many packages are only loaded later when they are explicitly used.
 
 #+BEGIN_SRC emacs-lisp
-  (setq use-package-always-defer t
+  (setq use-package-always-defer nil
 	use-package-verbose t)
 #+END_SRC
 
@@ -225,10 +226,12 @@ in the macro being fully expanded at which point =use-package= isn't actually re
 Since the code is automatically compiled during runtime, if the configuration hasn't already been
 previously compiled manually then all of the package initialization will still take place at startup.
 
+For some reason, =require '(bind-key)= needs to be overtly stated (and seemingly outside of =eval-when-compile= for =:bind= personal keybindings to work with byte compilation (MEA - [2018-11-03 Sat])
+
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile
     (require 'package)
-  
+
     (unless (assoc-default "melpa" package-archives)
       (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
     (unless (assoc-default "org" package-archives)
@@ -240,6 +243,7 @@ previously compiled manually then all of the package initialization will still t
       (package-install 'use-package))
     (require 'use-package)
     (setq use-package-always-ensure t))
+  (require 'bind-key) ; Needs to be here for :bind to work with byte-compiled emacs.el ... not sure why
 #+END_SRC
 
 ** Global Defaults
@@ -262,7 +266,7 @@ Some core editing desirables:
 *** Visual Appearance
 *** Font Management
 **** Font Locking
-Turn on font locking everywhere. Explain what font locking is.
+At present I have font locking turned on everywhere. Font Lock mode is a minor mode, always local to a particular buffer, and each buffer's major made tells Font Lock mode which text to fontify (add faces to). A programming language, for instance, will have rules about fontifying syntactically relevant constructs like comments, strings, and function names (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html][the GNU Emacs manual]]).
 #+BEGIN_SRC emacs-lisp
   (global-font-lock-mode t)
 #+END_SRC
@@ -532,10 +536,13 @@ Free and open source distributed version control system designed to handle every
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
+    :preface (message "I'm here at byte-comile time.")
+    :commands magit-get-top-dir
     :init (setq magit-completing-read-function 'ivy-completing-read)
-    :bind
-    ("<f5>" . magit-status)
-    ("C-c v t" . magit-status))
+    :bind (("<f5>" . magit-status)
+           ("C-c v t" . magit-status)
+           ("C-c f" . magit-grep)))
+
 #+END_SRC
 
 ** Org-Mode
@@ -570,8 +577,7 @@ I define my default =org-directory= as =~/org=. It must be symlinked to home dir
 
 Establish some meaningful defaults for =org-mode=: 
 
-- =org-confirm-babel-evaluate=
-Set to nil; no need to confirm babel evaluations of code.
+- =org-confirm-babel-evaluate= :: Set to nil; no need to confirm =org-babel= evaluations of code.
 #+BEGIN_QUOTE
 When t, Org prompts the user for confirmation before executing each code block. When nil, Org executes code blocks without prompting the user for confirmation. When this option is set to a custom function, Org invokes the function with these two arguments: the source code language and the body of the code block. The custom function must return either a t or nil, which determines if the user is prompted. Each source code language can be handled separately through this function argument. 
 #+END_QUOTE
@@ -594,9 +600,11 @@ When t, Org prompts the user for confirmation before executing each code block. 
 
 *** Org Modules
 
-Org modules seem to be a bit like an internal package system. There are a number of Org packages that are set under =org-modules=.
+Org modules seem to be a bit like an internal extension system, with some modules comprising Org's core and others external to it. There are a number of Org extensions that are initialized as =org-modules=.
 - The package =org-protocol= allows for capturing webpages and links while browsing and importing that into predefined capture templates.
-- 
+- Describe the rest of these if I use them; otherwise, get rid of them.
+
+Org-modules' individual behavior is established under their own headings below.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-modules (quote (org-bbdb
@@ -620,16 +628,21 @@ Org modules seem to be a bit like an internal package system. There are a number
 
 *** Agenda
 
-My intent is for the agenda to be the central *digital* hub of my activities at work, home, and elsewhere. It "speaks" to be hipster planner. This is part of a concerted and meaningful effort to make sure my calendars are in my direct control. I use Google products to interface with colleagues, friends, and families who use it. It is not my center.
+My intent is for the agenda to be the central *digital* hub of my activities at work, home, and elsewhere. It "speaks" to be hipster planner. This is part of a concerted and meaningful effort to make sure my calendars are in my direct control. I use Google products to interface with colleagues, friends, and families who use it. Google is not the center of my digital life.
+
+I bind =C-c a= to =org-agenda=.
+
+I keep the number of /agenda/ files small, currently.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
     :ensure nil
     :after org
+    :bind ("C-c a" . org-agenda)
     :custom
     (org-agenda-files '("~/org/organizer.org"
-                        "~/areas/teaching/admin-tasks.org")))
-  
+                        "~/org/teaching/teaching-admin-tasks.org")))
+
 #+END_SRC
 
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
@@ -676,74 +689,103 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package org-capture
-      :ensure nil
-      :after org
-      :preface
-      (defvar owl/org-basic-task-template "* TODO %^{Task}
-    :PROPERTIES:
-    :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
-    :END:
-    Captured %<%Y-%m-%d %H:%M>" "Template for basic task.")
+      (use-package org-capture
+        :ensure nil
+        :after org
+        :bind (("C-c c" . org-capture)
+               ("C-c w" . org-refile))
+        :preface
+        (defvar owl/org-basic-task-template "* TODO %^{Task}
+      :PROPERTIES:
+      :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
+      :END:
+      Captured %<%Y-%m-%d %H:%M>" "Template for basic task.")
 
-      (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-    :PROPERTIES:
-    :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-    :BIRTHDAY: %^{yyyy-mm-dd}
-    :EMAIL: %(org-contacts-template-email)
-    :NOTE: %^{NOTE}
-    :END:" "Template for org-contacts.")
+        (defvar owl/org-contacts-template "* %(org-contacts-template-name)
+      :PROPERTIES:
+      :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+      :BIRTHDAY: %^{yyyy-mm-dd}
+      :EMAIL: %(org-contacts-template-email)
+      :NOTE: %^{NOTE}
+      :END:" "Template for org-contacts.")
 
-      (setq org-capture-templates `(("t"                                                                         ; key
-                                     "todo"                                                                      ; description
-                                     entry                                                                       ; type
-                                     (file+headline ,org-default-notes-file "Deck")                              ; target
-                                     "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
-                                     :prepend nil          ; properties
-                                     :empty-lines 0        ; properties
-                                     :created t            ; properties
-                                     )
-                                    ("n"
-                                     "note"
-                                     entry
-                                     (file+headline ,org-default-notes-file "Notes")
-                                     "* %? :NOTE:\n:LOGBOOK:\n:CREATED: %U\n:END:"
-                                     :prepend nil
-                                     :empty-lines 0
-                                     :created t
-                                     )
-                                    ("j"
-                                     "notebook entry"
-                                     entry
-                                     (file+datetree "~/org/notebook/notebook.org")
-                                     "* %?"
-                                     :empty-lines 1
-                                     )
-                                    ("r"
-                                     "recipe"
-                                     entry
-                                     (file+headline "~/org/food.org" "Recipes")
-                                     "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
-                                     :prepend nil
-                                     :empty-lines 0
-                                     :created t
-                                     )				
-                                    ("e"
-                                     "elfeed"
-                                     entry
-                                     (file "~/org/captures/captures.org")
-                                     "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
-                                     :prepend nil
-                                     :empty-lines 0
-                                     :created t
-                                     )
-                                    ("p" "Protocol" entry (file "~/org/captures/captures.org")
-                                     "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                    ("L" "Protocol Link" entry (file "~/org/captures/captures.org")
-                                     "* %? [[%:link][%:description]] \nCaptured On: %U")				
-                                    )
-            )
-  )
+        (setq org-capture-templates `(("t"                                                                         ; key
+                                       "todo"                                                                      ; description
+                                       entry                                                                       ; type
+                                       (file+headline ,org-default-notes-file "Deck")                              ; target
+                                       "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
+                                       :prepend nil          ; properties
+                                       :empty-lines 0        ; properties
+                                       :created t            ; properties
+                                       )
+                                      ("n"
+                                       "note"
+                                       entry
+                                       (file+headline ,org-default-notes-file "Notes")
+                                       "* %? :NOTE:\n:LOGBOOK:\n:CREATED: %U\n:END:"
+                                       :prepend nil
+                                       :empty-lines 0
+                                       :created t
+                                       )
+                                      ("j"
+                                       "notebook entry"
+                                       entry
+                                       (file+datetree "~/org/notebook/notebook.org")
+                                       "* %?"
+                                       :empty-lines 1
+                                       )
+                                      ("r"
+                                       "recipe"
+                                       entry
+                                       (file+headline "~/org/food.org" "Recipes")
+                                       "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
+                                       :prepend nil
+                                       :empty-lines 0
+                                       :created t
+                                       )				
+                                      ("e"
+                                       "elfeed"
+                                       entry
+                                       (file "~/org/captures/captures.org")
+                                       "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
+                                       :prepend nil
+                                       :empty-lines 0
+                                       :created t
+                                       )
+                                      ("p" "Protocol" entry (file "~/org/captures/captures.org")
+                                       "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                      ("L" "Protocol Link" entry (file "~/org/captures/captures.org")
+                                       "* %? [[%:link][%:description]] \nCaptured On: %U")				
+                                      )
+              )
+    )
+#+END_SRC
+
+I like =org-refile= to be promiscuous. To that end, it should use outline paths, complete in steps, and allow for the creation of parent nodes on-the-fly. See See https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html for details on some of the hacks here.
+
+I don't like the huge list of refile targets.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-refile-use-outline-path 'file)
+  (setq org-outline-path-complete-in-steps nil)
+
+  ;; Allow on-the-fly creation of parent headings
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+
+  (setq org-refile-targets '(("~/org/organizer.org" :maxlevel . 5)
+                             ("~/org/captures.org" :maxlevel . 5)
+                             ("~/org/areas/food/food.org" :maxlevel . 5)
+                             ("~/org/areas/freelance/freelance.org" :maxlevel . 5)
+                             ("~/org/areas/reading.org" :maxlevel . 5)
+                             ("~/org/areas/teaching.org" :maxlevel . 5)
+                             ("~/org/areas/writing.org" :maxlevel . 5)
+                             ("~/org/projects/ettelon/ettelon.org" :maxlevel . 5)
+                             ("~/org/resources/notes/music.org" :maxlevel . 5)
+                             ("~/org/resources/notes/library.org" :maxlevel . 5)
+                             ("~/org/resources/notes/reference.org" :maxlevel . 8)
+                             ("~/org/resources/notes/survival.org" :maxlevel . 5)
+                             ))
+
 #+END_SRC
 
 *** Clock
@@ -755,6 +797,24 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
 *** Journal
 
 *** Languages
+*** Habits (=org-habit=)
+
+Habit tracking via =org-habit= will show a graph in the agenda tracking progress and consistency for established habits. I think it's a good idea to keep the set of habits small and specific.
+
+From [[https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html][Aaraon Bieber's org-mode setup]]:
+
+#+BEGIN_QUOTE
+To create a habit, you need two things:
+
+1. A SCHEDULED tag with a repeat specification (like .+ or ++), and
+2. A STYLE property set to the value habit.
+
+#+END_QUOTE
+
+
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
 
 *** Reading List Management
 
