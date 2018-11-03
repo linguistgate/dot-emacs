@@ -56,17 +56,19 @@
     - [[#agenda][Agenda]]
     - [[#bullets][Bullets]]
     - [[#capture-and-refile][Capture and Refile]]
+      - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
+      - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
     - [[#clock][Clock]]
     - [[#contacts][Contacts]]
     - [[#encryption][Encryption]]
     - [[#journal][Journal]]
     - [[#languages][Languages]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
-  - [[#shave][Shave]]
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
     - [[#toc-org][Toc-org]]
   - [[#post-initialization][Post Initialization]]
+- [[#building-a-second-brain][Building a Second Brain]]
 
 ** About This File
 This is a rebuild and refactoring of my Emacs configuration using literate programming techniques.
@@ -767,6 +769,8 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
     )
 #+END_SRC
 
+**** Setting some Refile behaviors
+
 I like =org-refile= to be promiscuous. To that end, it should use outline paths, complete in steps, and allow for the creation of parent nodes on-the-fly. See See https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html for details on some of the hacks here.
 
 I don't like the huge list of refile targets.
@@ -777,19 +781,25 @@ I don't like the huge list of refile targets.
 
   ;; Allow on-the-fly creation of parent headings
   (setq org-refile-allow-creating-parent-nodes 'confirm)
+#+END_SRC
 
+**** Refile targets: Integration with P.A.R.A.
+
+All "areas" are included in the =~/org= directory itself. Soft-linking to a separate =~/areas= folder can result in disasters for /certain/ cloud-based repositories I'm currently using (perhaps not forever).
+
+#+BEGIN_SRC emacs-lisp
   (setq org-refile-targets '(("~/org/organizer.org" :maxlevel . 5)
                              ("~/org/captures.org" :maxlevel . 5)
-                             ("~/org/areas/food/food.org" :maxlevel . 5)
-                             ("~/org/areas/freelance/freelance.org" :maxlevel . 5)
-                             ("~/org/areas/reading.org" :maxlevel . 5)
-                             ("~/org/areas/teaching.org" :maxlevel . 5)
-                             ("~/org/areas/writing.org" :maxlevel . 5)
+                             ("~/org/food.org" :maxlevel . 5)
+                             ("~/org/freelance.org" :maxlevel . 5)
+                             ("~/org/reading.org" :maxlevel . 5)
+                             ("~/org/teaching.org" :maxlevel . 5)
+                             ("~/org/writing.org" :maxlevel . 5)
                              ("~/org/projects/ettelon/ettelon.org" :maxlevel . 5)
-                             ("~/org/resources/notes/music.org" :maxlevel . 5)
-                             ("~/org/resources/notes/library.org" :maxlevel . 5)
-                             ("~/org/resources/notes/reference.org" :maxlevel . 8)
-                             ("~/org/resources/notes/survival.org" :maxlevel . 5)
+                             ("~/org/music.org" :maxlevel . 5)
+                             ("~/org/library.org" :maxlevel . 5)
+                             ("~/org/reference.org" :maxlevel . 8)
+                             ("~/org/survival.org" :maxlevel . 5)
                              ))
 
 #+END_SRC
@@ -814,19 +824,7 @@ To create a habit, you need two things:
 
 1. A SCHEDULED tag with a repeat specification (like .+ or ++), and
 2. A STYLE property set to the value habit.
-
-#+BEGIN_EXAMPLE
-** TODO Shave
-   SCHEDULED: <2009-10-17 Sat .+2d/4d>
-   :PROPERTIES:
-   :STYLE:    habit
-   :LAST_REPEAT: [2009-10-19 Mon 00:36]
-   :END:
-#+END_EXAMPLE
-
-
 #+END_QUOTE
-
 
 #+BEGIN_SRC emacs-lisp
 
@@ -857,3 +855,18 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
 	 gc-cons-percentage 0.1)
  #+END_SRC 
 l
+* Building a Second Brain
+
+One reason I use Emacs and Org-mode is that it allows me to "build a second brain" and to seamlessly integrate writing, reading, knowledge management, and workflows from many areas of my life. I don't think that Emacs can solve all workflow and management issues, but Org-mode is an enticing and highly (addictive?) method of using plain text to organize my world(s).
+
+My refile targets are associated with the principle of using Emacs and Org, in particular, as a way to build a second brain ("B.A.S.B.").
+
+These ideas derive from the knowledge management principles developed by Tiago Forte. Two excellent resources I've used in developing my own thinking are the following posts from Michael Fogleman ([[@tasshingfoleman][@tasshinfogleman]]):
+
+- [[https://praxis.fortelabs.co/building-a-second-brain-in-emacs-and-org-mode-faa20ae06fc/][Building a Second Brain in Emacs and Org-Mode]]
+- [[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][Implementing a Second Brain in Emacs]]
+
+Building a Second Brain /extends/ GTD principles by adding three additional strategies:
+
+1. Getting Things Done (GTD) :: Capture, track, and opportunistically surface appropriate tasks across many projects
+
