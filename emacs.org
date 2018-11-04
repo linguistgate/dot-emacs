@@ -3,12 +3,44 @@
 #+PROPERTY: header-args :tangle yes
 #+STARTUP: indent
 
+* Design Concerns
+** Why a Literate Configuration?
+
+Literate programming is human-centric in the sense that programming code is "tangled" with prose. Moreover, the "program" unfolds in a way that reflects human reasoning, not machine logic. I don't have a stake in whether I think literate programming is good (and I don't even really know where it stands among programmers and coders in 2018). In wanting my Emacs configuration to be configurable but not get out of hand, I have been trying different options over the years. The literate programming examples I've seen online have made a good case for something resembling "literate" programming as the basis for a dot Emacs configuration.
+
+** Must-Haves
+
+- A reliable and fast-loading configuration; a byte-compiled =init.elc= for even faster load time
+- A writing-centric setup with a beautiful writing theme (=poet-theme=)
+- A clear way of handling images that are associated with Org files
+- A general philosophy of avoiding new packages; favor taking the relevant bits of code and pasting them into this configuraiton with literate explanations of what the code does
+- A working, reliable, and consistent tagging, capture, and refiling system based on principles of Building a Second Brain, PARA, and other ideas from Tiago Forte
+- A clear and consistent structure to my =~/org= directory that is recapitulated in my capture and refiling system
+- A dashboard to replace =organizer.org= or to heavily supplement it
+- Spellchecking, hydras, and other navigation tools that favor /writing/ and /editing/
+- An =.emacs.d/= directory that properly files away user configuration and is not cluttered
+- =init.el= and associated files that make sense, aren't overly complicated, and don't contain code I don't use
+- A minimal =org-trello= working setup that allows me keep teaching tasks compartmentalized
+- A way to distinguish packages on MELPA, packages not there, and packages that are experimental, and a way to sandbox non-working packages
+- A way to load a minimally working config that will always have my bare bones
+
+** Things That Will Continue to Be Built Out
+
+- A server and publishing system that allows for Wikis, notebooks, and web pages to be created from Org content
+- Various ways of capturing online material and storing it in =resources/= for offline access (=org-download=, etc.)
+- Good langauge and font support for German, Korean, and French when I want to type in and use those languages
+- Non-linear, non-hierarchical tools like =org-brain= as ways to enhance the knowledge management system I am building
+
 * Configuration
 :PROPERTIES:
 :VISIBILITY: children
 :END:
 
 ** Table of Contents :TOC_5_gh:
+- [[#design-concerns][Design Concerns]]
+  - [[#why-a-literate-configuration][Why a Literate Configuration?]]
+  - [[#must-haves][Must-Haves]]
+  - [[#things-that-will-continue-to-be-built-out][Things That Will Continue to Be Built Out]]
 - [[#configuration][Configuration]]
   - [[#about-this-file][About This File]]
   - [[#config-file-tweaks][Config File Tweaks]]
@@ -67,8 +99,9 @@
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
     - [[#toc-org][Toc-org]]
+    - [[#writing][Writing]]
+  - [[#dashboard][Dashboard]]
   - [[#post-initialization][Post Initialization]]
-- [[#building-a-second-brain][Building a Second Brain]]
 
 ** About This File
 This is a rebuild and refactoring of my Emacs configuration using literate programming techniques.
@@ -648,8 +681,8 @@ I keep the number of /agenda/ files small, currently.
     :after org
     :bind ("C-c a" . org-agenda)
     :custom
-    (org-agenda-files '("~/org/organizer.org"
-                        "~/org/teaching/teaching-admin-tasks.org")))
+    (org-agenda-files '("~/org/dashboard.org"
+                        "~/org/areas/health.org")))
 
 #+END_SRC
 
@@ -788,18 +821,8 @@ I don't like the huge list of refile targets.
 All "areas" are included in the =~/org= directory itself. Soft-linking to a separate =~/areas= folder can result in disasters for /certain/ cloud-based repositories I'm currently using (perhaps not forever).
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets '(("~/org/organizer.org" :maxlevel . 5)
-                             ("~/org/captures.org" :maxlevel . 5)
-                             ("~/org/food.org" :maxlevel . 5)
-                             ("~/org/freelance.org" :maxlevel . 5)
-                             ("~/org/reading.org" :maxlevel . 5)
-                             ("~/org/teaching.org" :maxlevel . 5)
-                             ("~/org/writing.org" :maxlevel . 5)
-                             ("~/org/projects/ettelon/ettelon.org" :maxlevel . 5)
-                             ("~/org/music.org" :maxlevel . 5)
-                             ("~/org/library.org" :maxlevel . 5)
-                             ("~/org/reference.org" :maxlevel . 8)
-                             ("~/org/survival.org" :maxlevel . 5)
+  (setq org-refile-targets '(("~/org/dashboard.org" :maxlevel . 5)
+                             ("~/org/areas/health.org" :maxlevel . 5)
                              ))
 
 #+END_SRC
@@ -846,8 +869,39 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
      :after org
      :init (add-hook 'org-mode-hook #'toc-org-enable))
  #+END_SRC
+*** Writing
+
+** Dashboard
+
+This is an extensible Emacs startup screen that I've started to experiment with as a slow replacement for =organizer.org=.
+
+Dashboard requires =page-break-lines= and =projectile=.
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package page-break-lines)
+
+  (use-package dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    ;; Set the title
+    (setq dashboard-banner-logo-title "Dashboard")
+    ;; Set the banner
+    (setq dashboard-startup-banner "/home/owl/org/resources/image-collections/classic_rock_albums/test.png")
+    ;; Customize widgets
+    (setq dashboard-items '((recents . 3)
+                            (projects . 3)
+                            (agenda . 5 )
+                            (registers . 1)))
+    (setq show-week-agenda-p nil)
+    )
+
+#+END_SRC
+
 
 ** Post Initialization
+
  Let's lower our GC thresholds back down to a sane level.
 
  #+BEGIN_SRC emacs-lisp
@@ -855,18 +909,4 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
 	 gc-cons-percentage 0.1)
  #+END_SRC 
 l
-* Building a Second Brain
-
-One reason I use Emacs and Org-mode is that it allows me to "build a second brain" and to seamlessly integrate writing, reading, knowledge management, and workflows from many areas of my life. I don't think that Emacs can solve all workflow and management issues, but Org-mode is an enticing and highly (addictive?) method of using plain text to organize my world(s).
-
-My refile targets are associated with the principle of using Emacs and Org, in particular, as a way to build a second brain ("B.A.S.B.").
-
-These ideas derive from the knowledge management principles developed by Tiago Forte. Two excellent resources I've used in developing my own thinking are the following posts from Michael Fogleman ([[@tasshingfoleman][@tasshinfogleman]]):
-
-- [[https://praxis.fortelabs.co/building-a-second-brain-in-emacs-and-org-mode-faa20ae06fc/][Building a Second Brain in Emacs and Org-Mode]]
-- [[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][Implementing a Second Brain in Emacs]]
-
-Building a Second Brain /extends/ GTD principles by adding three additional strategies:
-
-1. Getting Things Done (GTD) :: Capture, track, and opportunistically surface appropriate tasks across many projects
 
