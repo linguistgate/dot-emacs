@@ -31,6 +31,13 @@ Literate programming is human-centric in the sense that programming code is "tan
 - Good langauge and font support for German, Korean, and French when I want to type in and use those languages
 - Non-linear, non-hierarchical tools like =org-brain= as ways to enhance the knowledge management system I am building
 
+** Desirables
+- Ledger ([[https://www.ledger-cli.org/][Ledger]]). Also possibly [[https://github.com/NicolasPetton/elbank][Elbank]].
+- [[https://github.com/abo-abo/org-download][Org-download]]
+- Possibly some code from [[https://github.com/rnkn/fountain-mode/][Founntain Mode]] (screenwriting)
+- Check out [[https://www.gnu.org/software/emacs-muse/manual/muse.html][Muse]] alongside Org pubishing system. What are my needs?
+-  
+
 * Configuration
 :PROPERTIES:
 :VISIBILITY: children
@@ -41,6 +48,7 @@ Literate programming is human-centric in the sense that programming code is "tan
   - [[#why-a-literate-configuration][Why a Literate Configuration?]]
   - [[#must-haves][Must-Haves]]
   - [[#things-that-will-continue-to-be-built-out][Things That Will Continue to Be Built Out]]
+  - [[#desirables][Desirables]]
 - [[#configuration][Configuration]]
   - [[#about-this-file][About This File]]
   - [[#config-file-tweaks][Config File Tweaks]]
@@ -61,11 +69,21 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#initialize-package-management][Initialize Package Management]]
   - [[#global-defaults][Global Defaults]]
     - [[#core-editing][Core Editing]]
+      - [[#visual-line-mode][Visual Line Mode]]
+      - [[#fix-word][Fix Word]]
+    - [[#undo][Undo]]
+      - [[#add-undo-tree-code-or-package][Add undo-tree code or package]]
     - [[#visual-appearance][Visual Appearance]]
     - [[#font-management][Font Management]]
       - [[#font-locking][Font Locking]]
       - [[#default-fonts][Default Fonts]]
+      - [[#font-switching][Font Switching]]
+      - [[#org-mode-integration-with-fonts][Org Mode Integration with Fonts]]
     - [[#theme-management][Theme Management]]
+      - [[#themes-in-rotation][Themes in Rotation]]
+      - [[#writing-theme][Writing Theme]]
+        - [[#link-to-writing-environment-heading-in-this-document][Link to Writing Environment heading in this document]]
+      - [[#functions-to-switch-among-themes][Functions to Switch Among Themes]]
     - [[#aggressive-indent][Aggressive Indent]]
   - [[#accessibility][Accessibility]]
     - [[#hinting][Hinting]]
@@ -75,13 +93,14 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#ivy][Ivy]]
     - [[#counsel][Counsel]]
     - [[#swiper][Swiper]]
-  - [[#navigation][Navigation]]
-    - [[#uniquify][Uniquify]]
-    - [[#dired][Dired]]
   - [[#project-management][Project Management]]
     - [[#version-control][Version Control]]
       - [[#backups][Backups]]
       - [[#magit][Magit]]
+  - [[#deft][Deft]]
+  - [[#navigation][Navigation]]
+    - [[#uniquify][Uniquify]]
+    - [[#dired][Dired]]
   - [[#org-mode][Org-Mode]]
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
@@ -93,13 +112,31 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#clock][Clock]]
     - [[#contacts][Contacts]]
     - [[#encryption][Encryption]]
+    - [[#custom-ids-org-id][Custom IDs (=org-id=)]]
     - [[#journal][Journal]]
     - [[#languages][Languages]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
+      - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
+      - [[#list-of-publishing-projects][List of Publishing Projects]]
     - [[#toc-org][Toc-org]]
     - [[#writing][Writing]]
+  - [[#writing-environment][Writing Environment]]
+    - [[#poet-theme][Poet Theme]]
+      - [[#consider-worries-below-about-writing-config][Consider worries below about writing config]]
+    - [[#smart-quotes-and-apostrophes][Smart Quotes and Apostrophes]]
+    - [[#spellchecking-and-abbreviations][Spellchecking and Abbreviations]]
+      - [[#set-dictionary-to-hunspell][Set Dictionary to Hunspell]]
+      - [[#flyspell][Flyspell]]
+        - [[#change-aspell-to-hunspell][Change aspell to hunspell]]
+        - [[#make-sure-spellchecker-only-targets-prose-not-code-blocks][Make sure spellchecker only targets prose, not code blocks]]
+      - [[#switch-among-languages][Switch Among Languages]]
+      - [[#access-to-editable-dictionary][Access to Editable Dictionary]]
+        - [[#put-a-copy-in-orgresources][Put a copy in =~/org/resources/=?]]
+      - [[#abbrevs][Abbrevs]]
+    - [[#editing][Editing]]
+    - [[#distraction-free-writing][Distraction-Free Writing]]
   - [[#dashboard][Dashboard]]
   - [[#post-initialization][Post Initialization]]
 
@@ -126,7 +163,9 @@ generating the code for the config, unless the code block explicitly includes
 =:tangle no= as the above code block does.
 
 *** Reload Configuation
+
 Reload my configuration from inside of =org-mode= and assign custom function to =C-c r=.
+
 #+BEGIN_SRC emacs-lisp
   (defun owl/config-reload ()
     "Reloads ~/.emacs.d/emacs.org at runtime."
@@ -135,15 +174,18 @@ Reload my configuration from inside of =org-mode= and assign custom function to 
 
   (global-set-key (kbd "C-c r") 'owl/config-reload)
 #+END_SRC
+
 *** Visibility Settings
+
 Next we have a property defined on the [[Configuration][Configuration]] heading that defines the visibility
 that tells org to show it's direct children on startup. This way a clean outline of all
 sub headings under Configuration is shown each time this file is opened in org-mode.
 
 *** Table of Contents
+
 Finally, there is a [[Table of Contents][Table of Contents]] heading that includes the tag: =:TOC_3_gh:=. This
 tells an org-mode package =toc-org= to generate a table of contents under this heading
-that has a max depth of 3 and is created using Github-style hrefs. This table of contents
+that has a max depth of 5 and is created using Github-style hrefs. This table of contents
 is updated everytime the file is saved and makes for a functional table of contents that
 works property directly on github.
 
@@ -153,7 +195,7 @@ Some basic values:
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Matthew Edward Adams"
-	user-mail-address "m2eadams@gmail.com")
+        user-mail-address "m2eadams@gmail.com")
 #+END_SRC
 
 ** Emacs Initialization
@@ -194,21 +236,23 @@ When we startup, we want a minimal Emacs layout: no startup screen, no toolbar, 
 Set the directory where the Emacs configuration is installed.
 
 #+BEGIN_SRC emacs-lisp
-
+  (setq user-emacs-directory (file-truename "~/.emacs.d/"))
 #+END_SRC
 
-Set the user directory to =.emacs.d/user=.
+Customizations are unwanted in =init.el= (and in general), so accidental customizations are stored in =custom.el= under =./user=.
 
 #+BEGIN_SRC emacs-lisp
+  (setq custom-file "~/.emacs.d/user/custom.el")
 #+END_SRC
 
 The default ELPA package directory is =.emacs.d/elpa=. User-defined or non-listed packages should be situated in =./user= directory.
 
-Custom themes should be stored 
+Custom themes should be stored in =./user/themes/=.
 
 *** Package Management
 
 **** Package Settings
+
 We're going to set the =load-path= ourselves and avoid calling =(package-initilize)= (for
 performance reasons) so we need to set =package--init-file-ensured= to true to tell =package.el=
 to not automatically call it on our behalf. Additionally we're setting
@@ -236,11 +280,8 @@ initialization significantly as many packages are only loaded later when they ar
 #+END_SRC
 
 **** Manually Set Load Path
-We're going to set the load path ourselves so that we don't have to call =package-initialize= at
-runtime and incur a large performance hit. This load-path will actually be faster than the one
-created by =package-initialize= because it appends the elpa packages to the end of the load path.
-Otherwise any time a builtin package was required it would have to search all of third party paths
-first.
+
+We're going to set the load path ourselves so that we don't have to call =package-initialize= at runtime and incur a large performance hit. This load-path will actually be faster than the one created by =package-initialize= because it appends the elpa packages to the end of the load path. Otherwise any time a builtin package was required it would have to search all of third party paths first.
 
 #+BEGIN_SRC emacs-lisp
   (eval-and-compile
@@ -248,20 +289,12 @@ first.
 #+END_SRC
 
 **** Initialize Package Management
-Next we are going to require =package.el= and add our additional package archives, 'melpa' and 'org'.
-Afterwards we need to initialize our packages and then ensure that =use-package= is installed, which
-we promptly install if it's missing. Finally we load =use-package= and tell it to always install any
-missing packages.
 
-Note that this entire block is wrapped in =eval-when-compile=. The effect of this is to perform all
-of the package initialization during compilation so that when byte compiled, all of this time consuming
-code is skipped. This can be done because the result of byte compiling =use-package= statements results
-in the macro being fully expanded at which point =use-package= isn't actually required any longer.
+Next we are going to require =package.el= and add our additional package archives, 'melpa' and 'org'. Afterwards we need to initialize our packages and then ensure that =use-package= is installed, which we promptly install if it's missing. Finally we load =use-package= and tell it to always install any missing packages.
 
-Since the code is automatically compiled during runtime, if the configuration hasn't already been
-previously compiled manually then all of the package initialization will still take place at startup.
+Note that this entire block is wrapped in =eval-when-compile=. The effect of this is to perform all of the package initialization during compilation so that when byte compiled, all of this time consuming code is skipped. This can be done because the result of byte compiling =use-package= statements results in the macro being fully expanded at which point =use-package= isn't actually required any longer.
 
-For some reason, =require '(bind-key)= needs to be overtly stated (and seemingly outside of =eval-when-compile= for =:bind= personal keybindings to work with byte compilation (MEA - [2018-11-03 Sat])
+Since the code is automatically compiled during runtime, if the configuration hasn't already been previously compiled manually then all of the package initialization will still take place at startup.
 
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile
@@ -281,8 +314,14 @@ For some reason, =require '(bind-key)= needs to be overtly stated (and seemingly
   (require 'bind-key) ; Needs to be here for :bind to work with byte-compiled emacs.el ... not sure why
 #+END_SRC
 
+***** COMMENT For some reason, =require '(bind-key)= needs to be overtly stated (and seemingly outside of =eval-when-compile= for =:bind= personal keybindings to work with byte compilation (MEA - [2018-11-03 Sat])
+
+
 ** Global Defaults
 *** Core Editing
+*************** DONE Investigate whether there is a way to do inline TODOs in Org :ARCHIVE:
+CLOSED: [2018-11-24 Sat 07:41]
+*************** END
 
 Some core editing desirables:
 
@@ -294,9 +333,38 @@ Some core editing desirables:
   (setq-default truncate-lines nil
                 indicate-empty-lines t
                 require-final-newline t)
+#+END_SRC
 
+**** Visual Line Mode
+
+In =visual-line-mode= words are wrapped at the right window edge. Some commands will reference the "screen line" over the actual ("logical") line of text, e.g., =C-a= and =C-e=. Fringe markers aren't used by default.
+
+Here, I add a hook to ensure that =visual-line-mode= applies to LaTeX buffers.
+
+#+BEGIN_SRC 
   (add-hook 'LaTeX-mode-hook #'visual-line-mode)
 #+END_SRC
+
+In Org defaults, I set it to apply to =org-mode= as well.
+
+**** Fix Word
+
+I also want to be able to transform text quickly. The package [[https://github.com/mrkkrp/fix-word][fix-word]] is devoted to some of these cases. In the interests of not loading another package whose innards I never see and that can induce conflicts, I want to try to paste in the relevant code here and see if it seamlessly integrates with my configuration. One concern I have is that in the pursuit of package reduction, I am vastly adding to the number of lines of /this/ file (by, for example, not wanting to create a pseudo-package that simply provides the code from another file.
+*************** TODO Add =fix-word= code
+*************** END
+
+
+*** Undo
+
+From [[https://www.emacswiki.org/emacs/UndoTree][undo-tree documentation]]:
+
+#+BEGIN_QUOTE
+Emacs's undo system allows you to recover any past state of a buffer. To do this, Emacs treats "undo" itself as just another editing action that can be undone. This can be confusing and difficult to use. If you make an edit while undoing multiple changes, you "break the undo chain." To get back to where you were, you have to undo all the undos you just did, then undo all the changes you’d already undone before. Only then can you continue undoing from where you left off. If this sounds confusing, it’s because it is! Hence, a number of packages exist that replace it with the undo/redo system.
+
+Instead of treating undo/redo as a linear sequence of changes, =undo-tree-mode= treats undo history as a branching tree of changes, similar to the way Vim handles it. This makes it substantially easier to undo and redo any change, while preserving the entire history of past states. The =undo-tree= visualizer is particularly helpful in complex cases. An added side bonus is that undo history can in some cases be stored more efficiently, allowing more changes to accumulate before Emacs starts discarding history. Undo history can be saved persistently across sessions with Emacs 24.3 and later. It also sports various other nifty features: storing and restoring past buffer states in registers, a diff view of the changes that will be made by undoing, and probably more besides.
+#+END_QUOTE
+
+**** TODO Add undo-tree code or package
 
 *** Visual Appearance
 *** Font Management
@@ -305,7 +373,7 @@ Some core editing desirables:
 At present I have font locking turned on everywhere. Font Lock mode is a minor mode, always local to a particular buffer, and each buffer's major made tells Font Lock mode which text to fontify (add faces to). A programming language, for instance, will have rules about fontifying syntactically relevant constructs like comments, strings, and function names (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html][the GNU Emacs manual]]).
 
 #+BEGIN_SRC emacs-lisp
-  (global-font-lock-mode t)
+  (global-font-lock-mode nil)
 #+END_SRC
 
 **** Default Fonts
@@ -313,9 +381,89 @@ At present I have font locking turned on everywhere. Font Lock mode is a minor m
 The default fonts need to be installed at least for the relevant user under =~/.fonts=. I currently use the Input series of fonts.
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist '(font . "Input Mono 10" ))
-  (set-face-attribute 'default t :font "Input Mono 10" )
-  (set-face-attribute 'variable-pitch nil :family "Input")
+  (add-to-list 'default-frame-alist '(font . "Input Mono 11" ))
+  (set-face-attribute 'default t :font "Input Mono 11" )
+  (set-face-attribute 'variable-pitch nil :font "Input Serif 11")
+  (set-face-attribute 'fixed-pitch nil :font "Input Mono 11")
+  (add-hook 'text-mode-hook 'variable-pitch-mode)
+#+END_SRC
+
+**** Font Switching
+
+Establish function to set font to variable width in current buffer:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/buffer-face-mode-variable ()
+    "Set font to a variable width (proportional) fonts in current buffer"
+    (interactive)
+    (setq buffer-face-mode-face '(:family "Input Serif"))
+    (buffer-face-mode))
+#+END_SRC
+
+Establish function to set font to fixed width in current buffer:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/buffer-face-mode-fixed ()
+    "Sets a fixed width (monospace) font in current buffer"
+    (interactive)
+    (setq buffer-face-mode-face '(:family "Input Mono"))
+    (buffer-face-mode))
+#+END_SRC
+
+Finally, establish a function to set font to a pretty writing font if Input Serif isn’t what I want. Currently, I’m using ET Book, inspired by Edward Tufte. This function works best in cases where I am not creating tables or doing coding, just hard-core prose.
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/buffer-face-mode-writing ()
+    "Set font to a variable width (proportional) fonts in current buffer when writing prose"
+    (interactive)
+    (setq buffer-face-mode-face '(:family "ETBembo"))
+    (buffer-face-mode))
+#+END_SRC
+
+=Control-c + u + f/v/w= to change font type:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-keys ("C-c u f" . owl/buffer-face-mode-fixed)
+             ("C-c u v" . owl/buffer-face-mode-variable)
+             ("C-c u w" . owl/buffer-face-mode-writing))
+#+END_SRC
+
+**** Org Mode Integration with Fonts
+
+I want some elements in Org to be fixed pitch even when variable pitch is being used for primary text. These elements include the following:
+
+- Beginning and end of source code blocks
+- Tables
+- Verbatim text
+*************** TODO Find out why Org fixed pitch isn’t working for face envirs
+*************** END
+
+#+BEGIN_SRC emacs-lisp
+  ;; (dolist (face '(org-block-begin-line 
+  ;;                 org-block-end-line
+  ;;                 org-table 
+  ;;                 org-verbatim))
+  ;;   (set-face-attribute face nil :inherit 'fixed-pitch))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+    (let ((list (if (not (listp list-or-symbol))
+                    (list list-or-symbol)
+                  list-or-symbol)))
+      (require 'cl-lib)
+      (cl-adjoin element list)))
+
+  (eval-after-load "org"
+    '(mapc
+      (lambda (face)
+        (set-face-attribute
+         face nil
+         :inherit
+         (my-adjoin-to-list-or-symbol
+          'fixed-pitch
+          (face-attribute face :inherit))))
+      (list 'org-code 'org-block 'org-table)))
 #+END_SRC
 
 *** Theme Management
@@ -328,17 +476,33 @@ Ensure that variable pitches are respected in loaded themes:
 	      (variable-pitch-mode 1)))
 #+END_SRC
 
+**** Themes in Rotation
+
 Ensure that some common theme packages are installed through ELPA and configured according to creator recommendations. Currently, I am installing the =doom= suite and the =flatui-dark-theme=.
 
+=doom-themes-org-config= corrects and improves Org's native fontification. 
+*************** TODO Check whether =doom-themes-org-config= is set as is.
+*************** END
+
 #+BEGIN_SRC emacs-lisp
-  (use-package flatui-dark-theme)
+  (use-package flatui-dark-theme) 
 
   (use-package doom-themes
     :config (setq doom-themes-enable-bold t
-		  doom-themes-enable-italic t)
-    ;; Corrects (and improves) org-mode's native fontification.
+                  doom-themes-enable-italic t)
     (doom-themes-org-config))
 #+END_SRC
+ 
+**** Writing Theme
+
+The =poet-theme= in concert with several packages and tweaks forms the basis for my writer's configuration.
+
+Because this theme is "special," involving invocation of =olivetti-mode= among other things (=prettify=), I don't consider it a global default and instead set it up under its own heading, 
+
+***** TODO Link to Writing Environment heading in this document
+
+
+**** Functions to Switch Among Themes
 
 Establish a rotating index of themes:
 
@@ -372,10 +536,14 @@ In order to prevent overlay, =owl/cycle-theme= depends on on two additional func
 #+END_SRC
 
 The package =pretty-mode= redisplays parts of the Emacs buffer as pretty Unicode symbols. I have it turned off globally.
+*************** TODO Find out/fix why =global-pretty-mode= is displaying globally
+*************** END
 
 #+BEGIN_SRC emacs-lisp
-  (use-package pretty-mode)
-  (global-pretty-mode nil)
+  ;; (use-package pretty-mode
+  ;;   :defer t
+  ;;   :config
+  ;;   (global-pretty-mode nil))
 #+END_SRC
 
 *** Aggressive Indent
@@ -388,6 +556,7 @@ Because I mainly use Lisp and Python, I want aggressive indenting to be specific
   (use-package aggressive-indent
     :config (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 #+END_SRC
+
 ** Accessibility
 *** Hinting
 
@@ -427,8 +596,11 @@ The =helpful= package allows
   ("C-h x" . helpful-command)
   ("C-h z" . helpful-macro))
 #+END_SRC
+
 *** Hydra
+
 Hydra allows me to display a list of all the commands implemented in the echo area and easily interact with them.
+
 #+BEGIN_SRC emacs-lisp
 (use-package hydra
   :init
@@ -436,7 +608,9 @@ Hydra allows me to display a list of all the commands implemented in the echo ar
   :config
   (require 'hydra-ox))
 #+END_SRC
+
 I like a hydra to help me increase or decrease text scale in a given buffer:
+
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-zoom (global-map "<f6>")
   ("g" text-scale-increase "in")
@@ -445,6 +619,7 @@ I like a hydra to help me increase or decrease text scale in a given buffer:
   ("0" (text-scale-set 0) :bind nil :exit t)
   ("1" (text-scale-set 0) nil :bind nil :exit t))
 #+END_SRC
+
 *** Ace Window
 
 See http://bnbeckwith.com/bnb-emacs/ for supercharged variant on C-x o traversal.
@@ -495,6 +670,7 @@ Package =auto-complete= works very well for some IDE-like behaviors.
 #+END_SRC
 
 *** Ivy
+
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :demand t
@@ -521,32 +697,26 @@ Package =auto-complete= works very well for some IDE-like behaviors.
   (use-package ivy-hydra)
 
 #+END_SRC
+
 *** Counsel
-Counsel allows us to utilize ivy by replacing many built-in and common functions
-with richer versions. Let's install it!
+
+Counsel allows me to utilize ivy by replacing many built-in and common functions with richer versions.
 
 #+BEGIN_SRC emacs-lisp
   (use-package counsel-projectile)
   (use-package counsel
     :demand t)
 #+END_SRC
+
 *** Swiper
-Swiper is an awesome searching utility with a quick preview. Let's install it and
-load it when =swiper= or =swiper-all= is called.
+
+Swiper is an awesome searching utility with a quick preview. Let's install it and load it when =swiper= or =swiper-all= is called.
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :commands (swiper swiper-all))
 #+END_SRC
 
-** Navigation
-*** Uniquify
-*** Dired
-# (use-package dired-hacks-utils)
-# (use-package dired-filter)
-# (use-package dired-rainbow)
-# (use-package dired-narrow)
-# (use-package dired-collapse)
 ** Project Management
 
 Projectile is a quick and easy project management package that "just works". We're
@@ -554,10 +724,15 @@ going to install it and make sure it's loaded immediately.
 
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-    :demand t)
+    :demand t
+    :config
+    (setq projectile-project-search-path '("~/org/projects/"))
+    (setq projectile-require-project-root nil)
+    )
 #+END_SRC
 
 *** Version Control
+
 **** Backups
 
 The following defaults allow for a saner backup system with Emacs files.
@@ -571,6 +746,7 @@ The following defaults allow for a saner backup system with Emacs files.
         kept-old-versions 2
         version-control t)
 #+END_SRC
+
 **** Magit
 
 Free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
@@ -585,6 +761,37 @@ Free and open source distributed version control system designed to handle every
            ("C-c f" . magit-grep)))
 
 #+END_SRC
+
+** Deft
+
+Deft is an Emacs mode for quickly browsing, filtering, and editing directories of plain text notes. It's inspired by Notational Velocity and developed by Jason Blevins. I'm interested in using it as part of my burgeoning knowledge management system and as a way to maintain disparate Org files that can nevertheless be accessed for retrieval and use.
+
+I install Deft via the =use-package= macro and keep its configuration relatively simple:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :bind ("<f8>" . deft)
+    :commands (deft)
+    :config (setq deft-directory "~/org"
+                  deft-extensions '("md" "org" "tex")
+                  deft-recursive t)
+    )
+#+END_SRC
+
+The main notetaking directory, a sort of Wiki and Commonplace Book repository, is =~/org/notebook=. Most of the files here will be Org files, though that's not a given.
+
+I bind Deft to =<f8>=.
+
+I love Deft; I hope it stays fast.
+
+** Navigation
+*** Uniquify
+*** Dired
+# (use-package dired-hacks-utils)
+# (use-package dired-filter)
+# (use-package dired-rainbow)
+# (use-package dired-narrow)
+# (use-package dired-collapse)
 
 ** Org-Mode
 
@@ -619,9 +826,11 @@ I define my default =org-directory= as =~/org=. It must be symlinked to home dir
 Establish some meaningful defaults for =org-mode=: 
 
 - =org-confirm-babel-evaluate= :: Set to nil; no need to confirm =org-babel= evaluations of code.
+
 #+BEGIN_QUOTE
 When t, Org prompts the user for confirmation before executing each code block. When nil, Org executes code blocks without prompting the user for confirmation. When this option is set to a custom function, Org invokes the function with these two arguments: the source code language and the body of the code block. The custom function must return either a t or nil, which determines if the user is prompted. Each source code language can be handled separately through this function argument. 
 #+END_QUOTE
+
 - =org-confirm-elisp-link-function= :: No need to prompt me before executing an Emacs Lisp link
 - =org-log-done= ::  
 - =org-hide-emphasis-markers= :: Remove markup characters and display closer to output.
@@ -641,11 +850,11 @@ When t, Org prompts the user for confirmation before executing each code block. 
 
 *** Org Modules
 
-Org modules seem to be a bit like an internal extension system, with some modules comprising Org's core and others external to it. There are a number of Org extensions that are initialized as =org-modules=.
-- The package =org-protocol= allows for capturing webpages and links while browsing and importing that into predefined capture templates.
-- Describe the rest of these if I use them; otherwise, get rid of them.
+Org modules seem to be a bit like an internal extension system of self-contained libraries, with some modules comprising Org's core and others external to it. There are a number of Org extensions that are initialized as =org-modules=.
+- The package/library/module =org-protocol= allows for capturing webpages and links while browsing and importing that into predefined capture templates.
+- The module =org-inlinetask= allows for tasks to be inserted within outline structures without counting themselves as a heading of the structure /per se/. This is accomplished by making the task having $>15$ stars by default (something that can be changed globally or specific to a file).
 
-Org-modules' individual behavior is established under their own headings below.
+Org-modules' individual behavior is established under their own headings below (if needed).
 
 #+BEGIN_SRC emacs-lisp
   (setq org-modules (quote (org-bbdb
@@ -654,18 +863,17 @@ Org-modules' individual behavior is established under their own headings below.
                             org-gnus
                             org-id
                             org-info
-                            org-jsinfo
                             org-habit
                             org-inlinetask
                             org-irc
-                            org-mew
-                            org-mhe
                             org-protocol
-                            org-rmail
-                            org-vm
-                            org-wl
                             org-w3m)))
 #+END_SRC
+
+**** COMMENT List of modules I'm considering not using:
+- =org-gnus=
+- =org-irc=
+- =org-w3m=
 
 *** Agenda
 
@@ -673,7 +881,25 @@ My intent is for the agenda to be the central *digital* hub of my activities at 
 
 I bind =C-c a= to =org-agenda=.
 
-I keep the number of /agenda/ files small, currently.
+Currently, I build my agenda from top-level =.org= files in the =~/org/areas= directory. Recursive search solutions do not seem to be working; in addition, my preferred directory structure for =~/areas= is as follows.
+
+These are "publishable" documents that can be configured as a hierarchy of webpages, or they can be assembled into a wiki system.
+
+Under the PARA rubric, areas are "[[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][ongoing spheres of activity]]." They are /not/ projects, but projects often emerge from these areas. They are also /not/ resources, which are supposed to be "materials not tied to a specific project or area."
+
+A =TODO= item in an Areas file can imply either a repeating task, a onetime task, or a meaningful project (a task with a set of subtasks). Projects of substantial size should always be created under =~/org/projects/=. I let Projectile and =org-projectile= handle project management.
+
+#+BEGIN_EXAMPLE
+  area1.org
+  area2.org
+  ...
+  static/
+    img/
+    vids/
+  docs/
+  etc/
+  css/
+#+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
@@ -681,21 +907,26 @@ I keep the number of /agenda/ files small, currently.
     :after org
     :bind ("C-c a" . org-agenda)
     :custom
-    (org-agenda-files '("~/org/dashboard.org"
-                        "~/org/areas/health.org")))
+    (org-agenda-files (list "~/org/areas/"
+                            "~/org/projects/"))
+    )
 
 #+END_SRC
+*************** TODO Make org-agenda-files recursive for =~/org/projects/=
+*************** END
 
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
 
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-custom-commands
         '(("g" . "GTD contexts")
-          ("go" "Office" tags-todo "@office")
           ("gc" "Computer" tags-todo "@computer")
-          ("gp" "Phone" tags-todo "@phone")
+          ("gf" "Food" tags-todo "@food")
           ("gh" "Home" tags-todo "@home")
-          ("ge" "Errands" tags-todo "@errands")
+          ("gn" "Notebook" tags-todo "@notes")
+          ("go" "Office" tags-todo "@office")
+          ("gr" "Reading" tags-todo "@reading")
+          ("gs" "Self" tags-todo "@self")
           ("gw" "Writing" tags-todo "@writing")
           ("G" "GTD Block Agenda"
            ((tags-todo "@office")
@@ -708,13 +939,13 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
            ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
           ))
 
-  (setq org-tag-alist '(("@home" . ?h)
-                        ("@office" . ?o)
-                        ("@computer" .?c)
-                        ("@phone" . ?p)
-                        ("@email" . ?m)
-                        ("@writing" . ?w)
-                        ("@errands" . ?e)))
+    (setq org-tag-alist '(("@home" . ?h)
+                          ("@office" . ?o)
+                          ("@computer" .?c)
+                          ("@phone" . ?p)
+                          ("@email" . ?m)
+                          ("@writing" . ?w)
+                          ("@errands" . ?e)))
 #+END_SRC
 
 *** Bullets
@@ -793,9 +1024,9 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
                                        :empty-lines 0
                                        :created t
                                        )
-                                      ("p" "Protocol" entry (file "~/org/captures/captures.org")
+                                      ("p" "Protocol" entry (file "~/org/resources/captures/captures.org")
                                        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                      ("L" "Protocol Link" entry (file "~/org/captures/captures.org")
+                                      ("L" "Protocol Link" entry (file "~/org/resources/captures/captures.org")
                                        "* %? [[%:link][%:description]] \nCaptured On: %U")				
                                       )
               )
@@ -821,9 +1052,8 @@ I don't like the huge list of refile targets.
 All "areas" are included in the =~/org= directory itself. Soft-linking to a separate =~/areas= folder can result in disasters for /certain/ cloud-based repositories I'm currently using (perhaps not forever).
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets '(("~/org/dashboard.org" :maxlevel . 5)
-                             ("~/org/areas/health.org" :maxlevel . 5)
-                             ))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 5)
+                             ("~/org/notebook/notebook.org" :maxlevel . 5)))
 
 #+END_SRC
 
@@ -833,9 +1063,71 @@ All "areas" are included in the =~/org= directory itself. Soft-linking to a sepa
 
 *** Encryption
 
+*** Custom IDs (=org-id=)
+
+Custom IDs allow internal linking within a document to work well.
+
+Another reason to use custom IDs becomes evident in export environments and many other situations. It’s helpful to tag headings in Org with custom IDs. They are most inconspicuous as they sit in drawers; however, they can get a little ugly, I guess.
+
+I’ve already loaded =org-id= as a module. Next, I make sure it applies for links (external and internal) as well:
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+#+END_SRC
+
+Lee Hinman, in his blog post “[[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Emacs Org-mode: Use good header IDs!]],” states that in exporting Org files, links are improperly anchored if text is modified post-export. HTML anchors can end up pointing to the wrong headlines.
+
+With custom IDs, the value of =CUSTOM_ID=, which is set on a per-heading basis in Org within a properties drawer, will be consistent even when headings are inserted in between other headings.
+
+The nicest feature of =org-id= is that these IDs need not be gobbledygook but can be human-friendly names.
+*************** TODO Figure out how to create simpler CUSTOM_IDs
+UUIDs are ugly and unwieldy...
+*************** END
+
+Hinman provides a private function that defines a personal version of =org-custom-id-get= and creates a new property if one doesn’t already exist.
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/org-custom-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+     If POM is nil, refer to the entry at point. If the entry does
+     not have an CUSTOM_ID, the function returns nil. However, when
+     CREATE is non nil, create a CUSTOM_ID if none is present
+     already. PREFIX will be passed through to `org-id-new'. In any
+     case, the CUSTOM_ID of the entry is returned."
+    (interactive)
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          id)))))
+#+END_SRC
+
+The following helper function interactively adds custom IDs to all headlines in a buffer if the headlines don’t already have one:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the
+     current file which do not already have one."
+    (interactive)
+    (org-map-entries (lambda () (owl/org-custom-id-get (point) 'create))))
+#+END_SRC
+
 *** Journal
 
 *** Languages
+
+I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((C . t)))
+#+END_SRC
+
 *** Habits (=org-habit=)
 
 Habit tracking via =org-habit= will show a graph in the agenda tracking progress and consistency for established habits. I think it's a good idea to keep the set of habits small and specific.
@@ -850,16 +1142,65 @@ To create a habit, you need two things:
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
-
+;; code here
 #+END_SRC
 
 *** Reading List Management
 
 *** Publishing
+
 My publishing needs are changing a lot. This will fill out once I've decided on something that is reliable.
+
 #+BEGIN_SRC emacs-lisp
   (require 'ox-latex)
 #+END_SRC
+
+**** Publishing Notebooks to a Private Website
+
+I want to publish my notebooks (main, programming, etc.) to a "private" HTML directory that displays as a webpage. This code, inspired by Pavel Panchekha's [[https://pavpanchekha.com/blog/org-mode-publish.html][blog post on the matter]], helps to accomplish that aim.
+
+Some necessities to make this work:
+
+- The entire website is a git repository, which I can check out locally.
+- When I change anything on an Org file that will appear html-ized on the website, I make a commit and push ito the git repository.
+- This commit "kicks off" a =post-receive= hook /that is stored "server side" in my Dropbox git repository for notebooks, called =notebook.git=.
+- The =post-receive= hook will work only if stored in the pushed-into git repository, not the "local" version.
+- In a future version of this publishing framework, I may employ an actual web server; for now, it is "fake" though works in principle by treating the =~/Dropbox/git/repositories/notebook.git= as the "remote," pushed-into git repo.
+- To build the website, the hook clones the repository to =/tmp/www-in= and updates it to the latest version.
+- The hook also creates =~/publishing/private-html/=, where HTML files are placed by the Org publishing system so that I can view them with a browser.
+
+The actual publishing takes place in =publish.el= stored in the =/etc= directory of =~/org/notebook/etc=.
+
+NEED TO THINK MORE ABOUT THIS. DON'T WANT DUPLICATION.
+
+
+**** List of Publishing Projects 
+
+Here I establish the set of publishing projects detailed above. Note that some of these depend on Git hooks to function properly (e.g., the =www= project).
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-publish-project-alist
+        `(("www"
+           :components ("www-pages" "www-static"))
+          ("www-pages"
+           :base-directory "/tmp/www-in"
+
+           :base-extension "org"
+           :recursive t
+
+           :publishing-directory "/tmp/www-out"
+           :publishing-function org-html-publish-to-html)
+
+          ("www-static"
+           :base-directory "/tmp/www-in"
+
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|gz\\|tar\\|zip\\|bz2\\|xz\\|tex\\|txt\\|html\\|scm\\|key\\|svg"
+           :recursive t
+
+           :publishing-directory "/tmp/www-out"
+           :publishing-function org-publish-attachment)))
+#+END_SRC
+
 *** Toc-org
  Let's install and load the =toc-org= package after org mode is loaded. This is the
  package that automatically generates an up to date table of contents for us.
@@ -869,7 +1210,273 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
      :after org
      :init (add-hook 'org-mode-hook #'toc-org-enable))
  #+END_SRC
+
 *** Writing
+
+My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]].
+
+** Writing Environment
+:PROPERTIES:
+:CUSTOM_ID: writing-environment
+:END:
+
+Writing is mostly done in Org, although occasionally in Markdown or LaTeX. My main goal with the writing environment is to make sure that it is distraction-free while being pleasing and powerful enough to invoke tools I need.
+
+What does distraction-free mean to me?
+
+- Possibility to work without internet
+- Reduction or elimination of system messages and alerts
+- Centrality of text
+- Screen largely free of unrelated information (information about modes, etc.)
+
+The first two are handled system-wide and result from the way I've built up my system using =i3=. The second two are handled in this section.
+
+What does pleasing mean?
+
+- Not ugly
+- Variable-width face for prose; fixed-width face for code
+- Italics and other fonting that is /aesthetically/ pleasing
+- Fast, reliable, sturdy, unlikely to break with changes in Emacs
+
+What does powerful mean?
+
+- Tools that get the job done
+- Avoidance of tools that I “might use someday.”
+- Spell-checking that works and allows me to reliably add words to a transportable text-based dictionary
+  - This dictionary should be part of the Linux system proper, either in the home directory or in the system tree (preferably in the home directory, though).
+  - It should be editable.
+  - It should have a copy or soft link in =resources=.
+- Useful hydras, either from other parts in this configuration (e.g., increasing and decreasing fonts in a buffer) or ones established here
+- Useful text manipulation
+
+*** Poet Theme
+
+The MELPA-stable theme =poet-theme= provides a lot of what I want already.
+
+In the future, I may want to write my own (=author-theme=?), but it suffices for now.
+
+First I point to its location in my =user= directory under =themes=:
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.emacs.d/user/themes/poet-theme")
+#+END_SRC
+
+Here create a new writing themes index (=poet= as only current member):
+
+#+BEGIN_SRC emacs-lisp
+(setq owl/writing-themes '(poet))
+(setq owl/writing-themes-index 0)
+#+END_SRC
+
+I then define a function to cycle through this index of themes, much as in the global case, and assign it to =C-<f12>= globally.
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/cycle-writing-theme ()
+    (interactive)
+    (setq owl/writing-themes-index (% (1+ owl/writing-themes-index) (length owl/writing-themes)))
+    (owl/load-indexed-writing-theme))
+
+  (global-set-key (kbd "C-<f12>") 'owl/cycle-writing-theme) 
+#+END_SRC
+
+In order to prevent overlay, =owl/cycle-writing-=theme= depends on on two additional functions, one that persists from default theme cycling (=try-load-theme=) and one that is slightly modified to reference the =writing-themes= index instead of the general index.
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/load-indexed-writing-theme ()
+    (owl/try-load-theme (nth owl/writing-themes-index owl/writing-themes)))
+#+END_SRC
+
+I don't really like this solution, but at least I reuse one function.
+
+**** DONE Consider worries below about writing config :ARCHIVE:
+CLOSED: [2018-11-24 Sat 10:40]
+
+- Is there a way to do this as part of the main configuration?
+- How do I disable the regular set of themes?
+- How do I invoke the highly customized variant here?
+
+Another way of looking at this is to create =author-theme.el= and then describe its components here, loading it separately from =user/themes=. 
+
+This would include trying to get face attributes, =olivetti=, flyspell, and so on to work when the theme is loaded.
+
+My worry is that flyspell, for instance, is not something I generally want loaded (I guess?), but by loading it with =author-theme.el=, I'm creating a situation where it's afterwards activated. It's strange to think that flyspell activation would be part of a "theme" in the tradtional sense that Emacs means. A theme is a set of appearance choices, more or less. The same worry holds for editing decisions.
+
+Don't overthink this. I want a simple writing environment that has a couple of configurable options.
+
+It's possible to think of this in terms of the main =poet-theme= and some well-established extras that potentially can be invoked via hydras or something. It's natural to memorize some writing-specific keybindings!
+
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/writing-buffer-face-modes ()
+    "Set these faces before loading poet theme."
+    (interactive)
+    (setq buffer-face-mode-face '(:family "ETBembo" :height))
+    (buffer-face-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (bind-keys ("C-c u w" . owl/writing-buffer-face-modes))
+#+END_SRC
+
+*** Smart Quotes and Apostrophes
+
+I’m using the [[https://github.com/gareth-rees/smart-quotes][smart-quotes package]] that Gareth Rees put together. It displays ~‘ “ ”~ in text-mode environments (which I’ve automatically activated via hook).
+
+I’m not super sure I’ll want this package around forever. It’s not on MELPA but does a decent job giving me “smart quotes” à la WYSIWG processing, similar to how quotes are entered manually in LaTeX.
+
+I’m a little leery about strings such as ~I’m~ replacing ~I'm~, for example. It's likely a misplaced worry for text files consisting of prose. Exporting seems to perform well for HTML, PDF (via =pdflatex= engine), and ODT. 
+
+Of course, it’s not a misplaced worry for text files that contain code, like the current file. Hence, the major dealbreaker is that smart quote replacements happen in code blocks, which isn’t happening in literate environments that are properly handled. The dangerous function in the package is =smart-quotes-smarten=, which will reach into code blocks and verbatim environments and improperly smarten apostrophes and other semantically meaningful symbols.
+
+The other tweak is to register the new way of spelling contractions with =ispell=. This is accomplished in 
+
+#+BEGIN_EXAMPLE
+(quote (("british" "[[:alpha:]]" "[^[:alpha:]]" "['’]" t ("-d" "en_GB") nil utf-8)))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smart-quotes
+    :load-path "user/packages/smart-quotes/"
+    :config (add-hook 'text-mode-hook 'turn-on-smart-quotes))
+#+END_SRC
+
+*** Spellchecking and Abbreviations
+
+**** Set Dictionary to Hunspell
+
+#+BEGIN_SRC emacs-lisp
+  (setq ispell-program-name (executable-find "hunspell")
+        ispell-dictionary "en_US")
+#+END_SRC
+
+**** Flyspell
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flyspell
+    :defer 1
+    :custom
+    (flyspell-abbrev-p t)
+    (flyspell-issue-message-flag nil)
+    (flyspell-issue-welcome-flag nil)
+    (flyspell-mode 1))
+
+  (use-package flyspell-correct-ivy
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-word-generic))
+    :custom (flyspell-correct-interface 'flyspell-correct-ivy))
+#+END_SRC
+
+Here is an awesome hydra to help out:
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-spelling (:color blue)
+    "
+    ^
+    ^Spelling^          ^Errors^            ^Checker^
+    ^────────^──────────^──────^────────────^───────^───────
+    _q_ quit            _<_ previous        _c_ correction
+    ^^                  _>_ next            _d_ dictionary
+    ^^                  _f_ check           _m_ mode
+    ^^                  ^^                  ^^
+    "
+    ("q" nil)
+    ("<" flyspell-correct-previous :color pink)
+    (">" flyspell-correct-next :color pink)
+    ("c" ispell)
+    ("d" ispell-change-dictionary)
+    ("f" flyspell-buffer)
+    ("m" flyspell-mode))
+#+END_SRC
+
+***** TODO Change aspell to hunspell                          :@computer:
+***** TODO Make sure spellchecker only targets prose, not code blocks :@computer:
+
+**** Switch Among Languages
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-c D"
+            (lambda ()
+              (interactive)
+              (ispell-change-dictionary "de_DE")
+              (flyspell-buffer)))
+
+  (bind-key "C-c E"
+            (lambda ()
+              (interactive)
+              (ispell-change-dictionary "en_US")
+              (flyspell-buffer)))
+
+#+END_SRC
+
+**** Access to Editable Dictionary
+
+***** TODO Put a copy in =~/org/resources/=?
+***** COMMENT What is this?
+
+**** Abbrevs
+
+*** Editing
+
+What sorts of keybindings make sense to include here?
+
+Are there hydras that people use when they are authoring large chunks of prose? Writing blogs?
+
+*** Distraction-Free Writing
+
+I use the =writeroom-mode= package as my main distraction destroyer. It creates a fullscreen Emacs environment, removes the modeline, and centers the text. It works well in its default aspect for me, though it's quite configurable.
+
+I bind it to =C-<f11>= to keep it close to the toggle for =poet-theme=, which I made =C-<f12>=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package writeroom-mode
+    :bind ("C-<f11>" . writeroom-mode)
+    :config
+    (setq writeroom-width 100
+          writeroom-mode-line nil
+          writeroom-global-effects '(writeroom-set-bottom-divider-width
+                                     writeroom-set-internal-border-width
+                                     (lambda (arg)
+                                       (let ((langs '("python"
+                                                      "emacs-lisp"
+                                                      "common-lisp"
+                                                      "js"
+                                                      "ruby")))
+                                         (cond
+                                          ((= arg 1)
+                                           (progn
+                                             (setq org-src-block-faces
+                                                   (mapcar (lambda (lang) (list lang '(:family "Input Mono" :height 1.0))) langs))
+                                             (normal-mode)
+                                             (variable-pitch-mode)))
+                                          ((= arg -1)
+                                           (progn
+                                             (setq org-src-block-faces
+                                                   (mapcar (lambda (lang) (list lang '(:family "Input Mono" :height 1.0))) langs))
+                                             (normal-mode)
+                                             (variable-pitch-mode)
+                                             (variable-pitch-mode)))))))))
+#+END_SRC
+
+Alternatively, =olivetti-mode= can be used. It doesn't do all the hiding that =writeroom-mode= does, but it does center the text.
+
+Here's a function that toggles it using =cond=, just for fun:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/toggle-olivetti-mode ()
+    "Toggle a distraction-free environment for writing."
+    (interactive)
+    (cond ((bound-and-true-p olivetti-mode)
+           (olivetti-mode -1)
+           (olivetti-toggle-hide-modeline)
+           (toggle-frame-fullscreen)
+           (menu-bar-mode 1))
+          (t
+           (olivetti-mode 1)
+           (olivetti-toggle-hide-modeline)
+           (toggle-frame-fullscreen)
+           (menu-bar-mode -1))))
+#+END_SRC
 
 ** Dashboard
 
@@ -888,17 +1495,16 @@ Dashboard requires =page-break-lines= and =projectile=.
     ;; Set the title
     (setq dashboard-banner-logo-title "Dashboard")
     ;; Set the banner
-    (setq dashboard-startup-banner "/home/owl/org/resources/image-collections/classic_rock_albums/test.png")
+    (setq dashboard-startup-banner "/home/owl/.emacs.d/user/images/dashboard-banner.png")
     ;; Customize widgets
-    (setq dashboard-items '((recents . 3)
-                            (projects . 3)
-                            (agenda . 5 )
+    (setq dashboard-items '((recents . 5)
+                            (projects . 5)
+                            (agenda . 5)
                             (registers . 1)))
     (setq show-week-agenda-p nil)
     )
 
 #+END_SRC
-
 
 ** Post Initialization
 
@@ -908,5 +1514,3 @@ Dashboard requires =page-break-lines= and =projectile=.
    (setq gc-cons-threshold 16777216
 	 gc-cons-percentage 0.1)
  #+END_SRC 
-l
-
