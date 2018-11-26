@@ -20,7 +20,6 @@ Literate programming is human-centric in the sense that programming code is "tan
 - Spellchecking, hydras, and other navigation tools that favor /writing/ and /editing/
 - An =.emacs.d/= directory that properly files away user configuration and is not cluttered
 - =init.el= and associated files that make sense, aren't overly complicated, and don't contain code I don't use
-- A minimal =org-trello= working setup that allows me keep teaching tasks compartmentalized
 - A way to distinguish packages on MELPA, packages not there, and packages that are experimental, and a way to sandbox non-working packages
 - A way to load a minimally working config that will always have my bare bones
 
@@ -110,11 +109,13 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
       - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
     - [[#clock][Clock]]
-    - [[#contacts][Contacts]]
+    - [[#contacts-org-contacts][Contacts (=org-contacts=)]]
+      - [[#rant][Rant]]
+      - [[#setup][Setup]]
     - [[#encryption][Encryption]]
     - [[#custom-ids-org-id][Custom IDs (=org-id=)]]
     - [[#journal][Journal]]
-    - [[#languages][Languages]]
+    - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
     - [[#reading-list-management][Reading List Management]]
     - [[#publishing][Publishing]]
@@ -1059,7 +1060,26 @@ All "areas" are included in the =~/org= directory itself. Soft-linking to a sepa
 
 *** Clock
 
-*** Contacts
+*** Contacts (=org-contacts=)
+
+**** Rant
+
+I’ve used BBDB in the past, and I like it. But =org-contacts= makes a lot of sense to me.
+
+What is of paramount importance to me is to have a local, plain-text file of my contacts (addresses, past addresses, anniversaries) that is divorced from the Google and Facebook ecosystem. Full stop.
+
+(Again, this isn’t to say I won’t use Google Contacts, especially in work contexts, or other contact software that interfaces seamlessly with smartphones. But that’s not the point. The point is that I should have primary ownership of my contact information, and plain text just makes sense.)
+
+**** Setup
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-contacts
+    :ensure nil
+    :after org
+    :custom (org-contacts-files '("~/org/areas/contacts.org")))
+#+END_SRC
+
+
 
 *** Encryption
 
@@ -1119,14 +1139,22 @@ The following helper function interactively adds custom IDs to all headlines in 
 
 *** Journal
 
-*** Languages
+*** Progrmaming Languages (=org-babel=)
 
 I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
 
 #+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((C . t)))
+  (use-package gnuplot)
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((C . t)
+                               (python . t)
+                               (gnuplot . t)))
+#+END_SRC
+
+#+RESULTS:
 
 *** Habits (=org-habit=)
 
@@ -1155,6 +1183,10 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
   (require 'ox-latex)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-tufte)
+#+END_SRC
+
 **** Publishing Notebooks to a Private Website
 
 I want to publish my notebooks (main, programming, etc.) to a "private" HTML directory that displays as a webpage. This code, inspired by Pavel Panchekha's [[https://pavpanchekha.com/blog/org-mode-publish.html][blog post on the matter]], helps to accomplish that aim.
@@ -1173,7 +1205,6 @@ The actual publishing takes place in =publish.el= stored in the =/etc= directory
 
 NEED TO THINK MORE ABOUT THIS. DON'T WANT DUPLICATION.
 
-
 **** List of Publishing Projects 
 
 Here I establish the set of publishing projects detailed above. Note that some of these depend on Git hooks to function properly (e.g., the =www= project).
@@ -1189,12 +1220,12 @@ Here I establish the set of publishing projects detailed above. Note that some o
            :recursive t
 
            :publishing-directory "/tmp/www-out"
-           :publishing-function org-html-publish-to-html)
+           :publishing-function org-html-publish-to-tufte-html)
 
           ("www-static"
            :base-directory "/tmp/www-in"
 
-           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|gz\\|tar\\|zip\\|bz2\\|xz\\|tex\\|txt\\|html\\|scm\\|key\\|svg"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|gz\\|tar\\|zip\\|bz2\\|xz\\|tex\\|txt\\|html\\|scm\\|key\\|svg\\|ttf\\|woff"
            :recursive t
 
            :publishing-directory "/tmp/www-out"
@@ -1289,6 +1320,7 @@ In order to prevent overlay, =owl/cycle-writing-=theme= depends on on two additi
 I don't really like this solution, but at least I reuse one function.
 
 **** DONE Consider worries below about writing config :ARCHIVE:
+
 CLOSED: [2018-11-24 Sat 10:40]
 
 - Is there a way to do this as part of the main configuration?
@@ -1322,13 +1354,17 @@ It's possible to think of this in terms of the main =poet-theme= and some well-e
 
 I’m using the [[https://github.com/gareth-rees/smart-quotes][smart-quotes package]] that Gareth Rees put together. It displays ~‘ “ ”~ in text-mode environments (which I’ve automatically activated via hook).
 
-I’m not super sure I’ll want this package around forever. It’s not on MELPA but does a decent job giving me “smart quotes” à la WYSIWG processing, similar to how quotes are entered manually in LaTeX.
+I’m not super sure I’ll want this package around forever. It’s not on MELPA but does a decent job giving me “smart quotes” à la WYSIWYG processing, similar to how quotes are entered manually in LaTeX.
 
 I’m a little leery about strings such as ~I’m~ replacing ~I'm~, for example. It's likely a misplaced worry for text files consisting of prose. Exporting seems to perform well for HTML, PDF (via =pdflatex= engine), and ODT. 
 
+(I’ve also had a couple of cases of trying to “smarten” an Org buffer and then realizing that header information had semantically meaningful straight apostrophes changed to something else. Not good. Gotta be careful.
+
 Of course, it’s not a misplaced worry for text files that contain code, like the current file. Hence, the major dealbreaker is that smart quote replacements happen in code blocks, which isn’t happening in literate environments that are properly handled. The dangerous function in the package is =smart-quotes-smarten=, which will reach into code blocks and verbatim environments and improperly smarten apostrophes and other semantically meaningful symbols.
 
-The other tweak is to register the new way of spelling contractions with =ispell=. This is accomplished in 
+The other tweak is to register the new way of spelling contractions with =ispell=. This is accomplished with the following code, which is just displayed here (it’s inactive):
+*************** TODO Add ispell smart-quotes code
+*************** END
 
 #+BEGIN_EXAMPLE
 (quote (("british" "[[:alpha:]]" "[^[:alpha:]]" "['’]" t ("-d" "en_GB") nil utf-8)))
