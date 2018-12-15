@@ -113,6 +113,7 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#rant][Rant]]
       - [[#setup][Setup]]
     - [[#encryption][Encryption]]
+    - [[#file-system-viewing][File System Viewing]]
     - [[#custom-ids-org-id][Custom IDs (=org-id=)]]
     - [[#journal][Journal]]
     - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
@@ -861,6 +862,7 @@ Org-modules' individual behavior is established under their own headings below (
   (setq org-modules (quote (org-bbdb
                             org-bibtex
                             org-crypt
+                            org-fstree
                             org-gnus
                             org-id
                             org-info
@@ -962,19 +964,19 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
 
 #+BEGIN_SRC emacs-lisp
-      (use-package org-capture
-        :ensure nil
-        :after org
-        :bind (("C-c c" . org-capture)
-               ("C-c w" . org-refile))
-        :preface
-        (defvar owl/org-basic-task-template "* TODO %^{Task}
+  (use-package org-capture
+    :ensure nil
+    :after org
+    :bind (("C-c c" . org-capture)
+           ("C-c w" . org-refile))
+    :preface
+    (defvar owl/org-basic-task-template "* TODO %^{Task}
       :PROPERTIES:
       :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
       :END:
       Captured %<%Y-%m-%d %H:%M>" "Template for basic task.")
 
-        (defvar owl/org-contacts-template "* %(org-contacts-template-name)
+    (defvar owl/org-contacts-template "* %(org-contacts-template-name)
       :PROPERTIES:
       :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
       :BIRTHDAY: %^{yyyy-mm-dd}
@@ -982,55 +984,61 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
       :NOTE: %^{NOTE}
       :END:" "Template for org-contacts.")
 
-        (setq org-capture-templates `(("t"                                                                         ; key
-                                       "todo"                                                                      ; description
-                                       entry                                                                       ; type
-                                       (file+headline ,org-default-notes-file "Deck")                              ; target
-                                       "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
-                                       :prepend nil          ; properties
-                                       :empty-lines 0        ; properties
-                                       :created t            ; properties
-                                       )
-                                      ("n"
-                                       "note"
-                                       entry
-                                       (file+headline ,org-default-notes-file "Notes")
-                                       "* %? :NOTE:\n:LOGBOOK:\n:CREATED: %U\n:END:"
-                                       :prepend nil
-                                       :empty-lines 0
-                                       :created t
-                                       )
-                                      ("j"
-                                       "notebook entry"
-                                       entry
-                                       (file+datetree "~/org/notebook/notebook.org")
-                                       "* %?"
-                                       :empty-lines 1
-                                       )
-                                      ("r"
-                                       "recipe"
-                                       entry
-                                       (file+headline "~/org/food.org" "Recipes")
-                                       "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
-                                       :prepend nil
-                                       :empty-lines 0
-                                       :created t
-                                       )				
-                                      ("e"
-                                       "elfeed"
-                                       entry
-                                       (file "~/org/captures/captures.org")
-                                       "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
-                                       :prepend nil
-                                       :empty-lines 0
-                                       :created t
-                                       )
-                                      ("p" "Protocol" entry (file "~/org/resources/captures/captures.org")
-                                       "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                      ("L" "Protocol Link" entry (file "~/org/resources/captures/captures.org")
-                                       "* %? [[%:link][%:description]] \nCaptured On: %U")				
-                                      )
-              )
+    (setq org-capture-templates `(("t"                                                                         ; key
+                                   "todo"                                                                      ; description
+                                   entry                                                                       ; type
+                                   (file+headline ,org-default-notes-file "Deck")                              ; target
+                                   "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
+                                   :prepend nil          ; properties
+                                   :empty-lines 0        ; properties
+                                   :created t            ; properties
+                                   )
+                                  ("n"
+                                   "note"
+                                   entry
+                                   (file+headline ,org-default-notes-file "Notes")
+                                   "* %? :NOTE:\n:LOGBOOK:\n:CREATED: %U\n:END:"
+                                   :prepend nil
+                                   :empty-lines 0
+                                   :created t
+                                   )
+                                  ("j"
+                                   "notebook entry"
+                                   entry
+                                   (file+datetree "~/org/notebook/notebook.org")
+                                   "* %?"
+                                   :empty-lines 1
+                                   )
+                                  ("r"
+                                   "recipe"
+                                   entry
+                                   (file+headline "~/org/food.org" "Recipes")
+                                   "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
+                                   :prepend nil
+                                   :empty-lines 0
+                                   :created t
+                                   )				
+                                  ("e"
+                                   "elfeed"
+                                   entry
+                                   (file "~/org/captures/captures.org")
+                                   "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
+                                   :prepend nil
+                                   :empty-lines 0
+                                   :created t
+                                   )
+                                  ("s"
+                                   "selected org-protocol link"
+                                   entry
+                                   (file "~/org/resources/captures/captures.org")
+                                   "* %^{Title}\nSource: %u, [[%:link][%:description]] \n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                  ("p" 
+                                   "org-protocol-link"
+                                   entry
+                                   (file "~/org/resources/captures/captures.org")
+                                   "* %? [[%:link][%:description]] \nCaptured On: %U")				
+                                  )
+          )
     )
 #+END_SRC
 
@@ -1058,6 +1066,23 @@ All "areas" are included in the =~/org= directory itself. Soft-linking to a sepa
 
 #+END_SRC
 
+The package [[https://github.com/mwfogleman/org-randomnote][org-randomnote]], created by [[https://github.com/mwfogleman][Tasshin Fogleman]], further implements P.A.R.A. workflow by mimicking the “Random Note” functionality advocated by Tiago Forte with Evernote.
+
+It can be used to “revisit nearly-forgotten but potentially-useful notes, or to spark creative insights by bringing older subjects into mind with new subjects.”
+
+Currently, I bind it to =C-c g= and focus only on the =captures.org= file and several other well-stocked files. There is additional code that can traverse entire directories. I might want to add this later.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-randomnote
+    :ensure t
+    :bind ("C-c g" . org-randomnote)
+    :config (setq org-randomnote-candidates '("~/org/resources/captures/captures.org"
+                                              "~/org/areas/writing.org"
+                                              "~/org/areas/reading.org"
+                                              "~/org/notebook/notebook.org"))
+    )
+#+END_SRC
+
 *** Clock
 
 *** Contacts (=org-contacts=)
@@ -1082,6 +1107,8 @@ What is of paramount importance to me is to have a local, plain-text file of my 
 
 
 *** Encryption
+*** File System Viewing
+
 
 *** Custom IDs (=org-id=)
 
