@@ -369,6 +369,14 @@ Instead of treating undo/redo as a linear sequence of changes, =undo-tree-mode= 
 **** TODO Add undo-tree code or package
 
 *** Visual Appearance
+
+Splitting windows on a latop like my Thinkpad T440p or a larger monitor results in different behaviors that can sometimes be unpredictable. In general, because I write more than I code, I prefer vertical splitting (i.e., windows opening to the right of other windows, or vice versa, and not windows opening below existing windows). I haven’t found a good solution for this yet, but for now I set the threshhold values for splitting windows to 0:
+
+#+BEGIN_SRC emacs-lisp
+  (setq split-height-threshold 80)
+  (setq split-width-threshold 160)
+#+END_SRC
+
 *** Font Management
 **** Font Locking
 
@@ -1103,6 +1111,8 @@ What is of paramount importance to me is to have a local, plain-text file of my 
 
 **** Setup
 
+But this all seems a little underpowered, and I have a huge bbdb database that I’d like to use (with former addresses, etc.).
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-contacts
     :ensure nil
@@ -1118,7 +1128,7 @@ What is of paramount importance to me is to have a local, plain-text file of my 
     :custom (org-contacts-files '("~/org/areas/contacts.org")))
 #+END_SRC
 
-
+***** COMMENT Requires more thought -- bbdb vs org-contacts
 
 *** Encryption
 *** File System Viewing
