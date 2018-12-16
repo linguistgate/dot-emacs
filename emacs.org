@@ -370,7 +370,7 @@ Instead of treating undo/redo as a linear sequence of changes, =undo-tree-mode= 
 
 *** Visual Appearance
 
-Splitting windows on a latop like my Thinkpad T440p or a larger monitor results in different behaviors that can sometimes be unpredictable. In general, because I write more than I code, I prefer vertical splitting (i.e., windows opening to the right of other windows, or vice versa, and not windows opening below existing windows). I haven’t found a good solution for this yet, but for now I set the threshhold values for splitting to different values:
+Splitting windows on a latop like my Thinkpad T440p vs. a larger monitor results in different behaviors that can sometimes be unpredictable. In general, because I write more than I code, I prefer vertical splitting (i.e., windows opening to the right of other windows, or vice versa, and not windows opening below existing windows). I haven’t found a good solution for this yet, but for now I set the threshhold values for splitting to different values:
 
 #+BEGIN_SRC emacs-lisp
   (setq split-height-threshold 200)
