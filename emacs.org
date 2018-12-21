@@ -926,6 +926,16 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
 *************** TODO Make org-agenda-files recursive for =~/org/projects/=
 *************** END
 
+
+I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "STARTED(s)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "MEETING"))))
+
+#+END_SRC
+
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
 
 #+BEGIN_SRC emacs-lisp
