@@ -1041,14 +1041,14 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
           :NOTE: %^{NOTE}
           :END:" "Template for org-contacts.")
 
-    (setq org-capture-templates `(("t"                                                                         ; key
-                                   "todo"                                                                      ; description
-                                   entry                                                                       ; type
-                                   (file+headline ,org-default-notes-file "Deck")                              ; target
-                                   "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"  ; template
-                                   :prepend nil          ; properties
-                                   :empty-lines 0        ; properties
-                                   :created t            ; properties
+    (setq org-capture-templates `(("t"                                                                              ; key
+                                   "todo"                                                                           ; description
+                                   entry                                                                            ; type
+                                   (function (lambda () (message "You have already arrived at your destination."))) ; target
+                                   "* TODO [#B] %^{Todo} \n:LOGBOOK:\n:CREATED: %U\n:END:"                          ; template
+                                   :prepend nil                                                                     ; properties
+                                   :empty-lines 0                                                                   ; properties
+                                   :created t                                                                       ; properties
                                    )
                                   ("c" 
                                    "contact"
