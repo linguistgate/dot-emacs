@@ -991,7 +991,6 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
           ("G" "GTD Block Agenda"
            ((tags-todo "@office")
             (tags-todo "@computer")
-            (tags-todo "@phone")
             (tags-todo "@home")
             (tags-todo "@errands")
             (tags-todo "@writing"))
@@ -1002,8 +1001,6 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
     (setq org-tag-alist '(("@home" . ?h)
                           ("@office" . ?o)
                           ("@computer" .?c)
-                          ("@phone" . ?p)
-                          ("@email" . ?m)
                           ("@writing" . ?w)
                           ("@errands" . ?e)))
 #+END_SRC
