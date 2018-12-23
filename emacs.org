@@ -104,6 +104,9 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
     - [[#agenda][Agenda]]
+      - [[#todo-keywords][‘TODO’ Keywords]]
+        - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
+      - [[#gtd-contexts][GTD Contexts]]
     - [[#bullets][Bullets]]
     - [[#capture-and-refile][Capture and Refile]]
       - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
@@ -926,15 +929,51 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
 *************** TODO Make org-agenda-files recursive for =~/org/projects/=
 *************** END
 
+**** ‘TODO’ Keywords
 
 I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
 
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "STARTED(s)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "MEETING"))))
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
 
 #+END_SRC
+
+In order for dependencies among these keywords to work, triggers must be imposed (see [[http://doc.norang.ca/org-mode.html][Bert Hansen's well-known org-mode setup]] for a diagram of state transitions).
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+#+END_SRC
+
+***** Fast ‘TODO’ Selection
+
+ Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-use-fast-todo-selection t)
+#+END_SRC
+ 
+Changing a task state is done with C-c C-t KEY
+
+where KEY is the appropriate fast todo state selection key as defined in org-todo-keywords.
+
+The setting
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+#+END_SRC
+
+allows changing todo states with S-left and S-right skipping all of the normal processing when entering or leaving a todo state. This cycles through the todo states but skips setting timestamps and entering notes which is very convenient when all you want to do is fix up the status of an entry. 
+
+**** GTD Contexts
 
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
 
