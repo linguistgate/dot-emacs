@@ -1308,7 +1308,6 @@ Integration of resources and references
   (use-package org-ref
     :config (setq reftex-default-bibliography '("~/org/resources/bibliograpies/mainref.bib"))
   
-    ;; see org-ref for use of these variables
     (setq org-ref-bibliography-notes ""
           org-ref-default-bibliography '("~/org/resources/bibliographies/mainref.bib")
           org-ref-pdf-directory "~/org/resources/articles/"))
