@@ -121,7 +121,9 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#journal-org-journal][Journal (=org-journal=)]]
     - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
-    - [[#reading-list-management][Reading List Management]]
+    - [[#reference-and-resource-management-org-ref-and-others][Reference and Resource Management (=org-ref= and others)]]
+      - [[#org-ref][Org-Ref]]
+      - [[#annotation][Annotation]]
     - [[#publishing][Publishing]]
       - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
       - [[#list-of-publishing-projects][List of Publishing Projects]]
@@ -1262,7 +1264,6 @@ The =:custom= block establishes the location of the agenda, the preferred format
     (org-journal-update-org-agenda-files)
 #+END_SRC
 
-
 *** Progrmaming Languages (=org-babel=)
 
 I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
@@ -1297,7 +1298,17 @@ To create a habit, you need two things:
 ;; code here
 #+END_SRC
 
-*** Reading List Management
+*** Reference and Resource Management (=org-ref= and others)
+
+**** Org-Ref
+
+Integration of resources and references
+
+*************** TODO Find out if Calibre can be integrated with Org
+
+**** Annotation
+
+Emacs and PDF integration.
 
 *** Publishing
 
