@@ -992,7 +992,7 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
            ((tags-todo "@office")
             (tags-todo "@computer")
             (tags-todo "@home")
-            (tags-todo "@errands")
+            (tags-todo "@self")
             (tags-todo "@writing"))
            nil                      ;; i.e., no local settings
            ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
@@ -1002,7 +1002,7 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
                           ("@office" . ?o)
                           ("@computer" .?c)
                           ("@writing" . ?w)
-                          ("@errands" . ?e)))
+                          ("@self" . ?s)))
 #+END_SRC
 
 *** Bullets
