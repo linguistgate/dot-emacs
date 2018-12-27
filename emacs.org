@@ -1058,6 +1058,15 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
                                    :empty-lines 0                                                                   ; properties
                                    :created t                                                                       ; properties
                                    )
+                                  ("a"               
+                                   "Article"         
+                                   entry             
+                                   (file+headline "~/org/resources/bibliographies/mainref.org" "Article") 
+                                   "* %^{Title} %(org-set-tags)  :article: \n:PROPERTIES:\n:Created: %U\n:Linked: %A\n:END:\n%i\nBrief description:\n%?" 
+                                   :prepend t       
+                                   :empty-lines 1   
+                                   :created t       
+                                   )
                                   ("c" 
                                    "contact"
                                    entry
@@ -1307,10 +1316,12 @@ Integration of resources and references
 #+BEGIN_SRC emacs-lisp
   (use-package org-ref
     :config (setq reftex-default-bibliography '("~/org/resources/bibliograpies/mainref.bib"))
-  
-    (setq org-ref-bibliography-notes ""
+
+    (setq org-ref-notes-directory "~/org/notebook/"
+          org-ref-pdf-directory "~/org/resources/articles/"
+          org-ref-bibliography-notes "~/org/notebook/notebook.org"
           org-ref-default-bibliography '("~/org/resources/bibliographies/mainref.bib")
-          org-ref-pdf-directory "~/org/resources/articles/"))
+          ))
 #+END_SRC
 
 **** Annotation
