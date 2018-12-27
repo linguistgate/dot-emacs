@@ -1240,7 +1240,8 @@ The following helper function interactively adds custom IDs to all headlines in 
 
 *** Journal (=org-journal=)
 
-The package =org-journal= does an outstanding job of using a datetree to organize tasks.
+The package =org-journal= does an outstanding job of using a datetree to organize tasks. I could use it for my Coleridgian notebook, but right now I’m exploring other options. I may come back to it.
+*************** TODO Decide about how to use =org-journal=: as portal to main Notebook, or as GTD task capturer
 
 In concert with project deadlines, recurring area deadlines (habits and things like oil changes), “tasks” are simply those items that don’t fall neatly into other categories.
 
@@ -1248,9 +1249,17 @@ I create a separate directory, =~/org/areas/tasks=, which =org-journal= points t
 
 /By default, =org-journal= will push tasks to the next day if they are not marked as complete. This satisfactorily replicates bullet journal practices and makes =org-journal= useful as a general GTD task organizer./
 
+The =:custom= block establishes the location of the agenda, the preferred format for file names, and 
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
-    :config (setq org-journal-dir "~/org/areas/tasks"))
+    :custom
+    (setq org-journal-dir "~/org/areas/tasks"     ; location
+          org-journal-file-format "%Y-%m-%d.org"  ; their file names
+          org-journal-enable-agenda-integration t ; ensure entries are on the agenda
+          )
+    )
+    (org-journal-update-org-agenda-files)
 #+END_SRC
 
 
