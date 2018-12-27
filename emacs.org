@@ -1304,6 +1304,10 @@ To create a habit, you need two things:
 
 Integration of resources and references
 
+#+BEGIN_SRC emacs-lisp
+  (use-package org-ref)
+#+END_SRC
+
 **** Annotation
 
 Emacs and PDF integration.
