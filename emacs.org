@@ -1306,8 +1306,6 @@ Integration of resources and references
 
 *************** STARTED Find out if Calibre can be integrated with Org
 
-
-
 **** Annotation
 
 Emacs and PDF integration.
