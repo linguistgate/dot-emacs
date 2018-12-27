@@ -922,6 +922,7 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
     :bind ("C-c a" . org-agenda)
     :custom
     (org-agenda-files (list "~/org/areas/"
+                            "~/org/areas/tasks/"
                             "~/org/projects/"))
     )
 
