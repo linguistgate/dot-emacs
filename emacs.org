@@ -1305,7 +1305,13 @@ To create a habit, you need two things:
 Integration of resources and references
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-ref)
+  (use-package org-ref
+    :config (setq reftex-default-bibliography '("~/org/resources/bibliograpies/Articles.bib"))
+
+    ;; see org-ref for use of these variables
+    (setq org-ref-bibliography-notes ""
+          org-ref-default-bibliography '("~/org/resources/bibliographies/Articles.bib")
+          org-ref-pdf-directory "~/org/resources/articles/"))
 #+END_SRC
 
 **** Annotation
