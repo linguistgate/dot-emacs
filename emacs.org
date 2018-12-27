@@ -1306,15 +1306,21 @@ Integration of resources and references
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-ref
-    :config (setq reftex-default-bibliography '("~/org/resources/bibliograpies/Articles.bib"))
+    :config (setq reftex-default-bibliography '("~/org/resources/bibliograpies/mainref.bib"))
 
     ;; see org-ref for use of these variables
     (setq org-ref-bibliography-notes ""
-          org-ref-default-bibliography '("~/org/resources/bibliographies/Articles.bib")
+          org-ref-default-bibliography '("~/org/resources/bibliographies/mainref.bib")
           org-ref-pdf-directory "~/org/resources/articles/"))
 #+END_SRC
 
 **** Annotation
+
+I use Sebastian Christ’s [[https://github.com/rudolfochrist/interleave][interleave]] package.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package interleave)
+#+END_SRC
 
 Emacs and PDF integration.
 
