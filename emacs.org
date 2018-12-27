@@ -118,7 +118,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#encryption][Encryption]]
     - [[#file-system-viewing][File System Viewing]]
     - [[#custom-ids-org-id][Custom IDs (=org-id=)]]
-    - [[#journal][Journal]]
+    - [[#journal-org-journal][Journal (=org-journal=)]]
     - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
     - [[#habits-org-habit][Habits (=org-habit=)]]
     - [[#reading-list-management][Reading List Management]]
@@ -766,7 +766,7 @@ Free and open source distributed version control system designed to handle every
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :preface (message "I'm here at byte-comile time.")
+    :preface (message "Magit is available at byte-compile time. I am proof thereof.")
     :commands magit-get-top-dir
     :init (setq magit-completing-read-function 'ivy-completing-read)
     :bind (("<f5>" . magit-status)
@@ -1038,6 +1038,14 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
           :NOTE: %^{NOTE}
           :END:" "Template for org-contacts.")
 
+    (defun org-journal-find-location ()
+      ;; Open today's journal, but specify a non-nil prefix argument in order to
+      ;; inhibit inserting the heading; org-capture will insert the heading.
+      (org-journal-new-entry t)
+      ;; Position point on the journal's top-level heading so that org-capture
+      ;; will add the new entry as a child entry.
+      (goto-char (point-min)))
+
     (setq org-capture-templates `(("t"                                                                              ; key
                                    "todo"                                                                           ; description
                                    entry                                                                            ; type
@@ -1062,13 +1070,8 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
                                    :empty-lines 0
                                    :created t
                                    )
-                                  ("j"
-                                   "notebook entry"
-                                   entry
-                                   (file+datetree "~/org/notebook/notebook.org")
-                                   "* %?"
-                                   :empty-lines 1
-                                   )
+                                  ("j" "Journal entry" entry (function org-journal-find-location)
+                                   "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
                                   ("r"
                                    "recipe"
                                    entry
@@ -1234,7 +1237,21 @@ The following helper function interactively adds custom IDs to all headlines in 
     (org-map-entries (lambda () (owl/org-custom-id-get (point) 'create))))
 #+END_SRC
 
-*** Journal
+*** Journal (=org-journal=)
+
+The package =org-journal= does an outstanding job of using a datetree to organize tasks.
+
+In concert with project deadlines, recurring area deadlines (habits and things like oil changes), “tasks” are simply those items that don’t fall neatly into other categories.
+
+I create a separate directory, =~/org/areas/tasks=, which =org-journal= points to in creating day-by-day journal files.
+
+/By default, =org-journal= will push tasks to the next day if they are not marked as complete. This satisfactorily replicates bullet journal practices and makes =org-journal= useful as a general GTD task organizer./
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-journal
+    :config (setq org-journal-dir "~/org/areas/tasks"))
+#+END_SRC
+
 
 *** Progrmaming Languages (=org-babel=)
 
@@ -1341,8 +1358,7 @@ Here I establish the set of publishing projects detailed above. Note that some o
 
 *** Writing
 
-My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]].
-
+My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]
 ** Writing Environment
 :PROPERTIES:
 :CUSTOM_ID: writing-environment
