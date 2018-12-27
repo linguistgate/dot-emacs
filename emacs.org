@@ -1304,7 +1304,16 @@ To create a habit, you need two things:
 
 Integration of resources and references
 
+<<<<<<< HEAD
 *************** STARTED Find out if Calibre can be integrated with Org; see devel branch
+=======
+*************** STARTED Find out if Calibre can be integrated with Org
+
+#+BEGIN_SRC emacs-lisp
+  (use-package calibre-mode
+    :load-path "user/packages/calibre-mode/")
+#+END_SRC
+>>>>>>> devel
 
 **** Annotation
 
