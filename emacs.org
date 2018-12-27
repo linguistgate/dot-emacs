@@ -69,7 +69,7 @@ Literate programming is human-centric in the sense that programming code is "tan
   - [[#global-defaults][Global Defaults]]
     - [[#core-editing][Core Editing]]
       - [[#visual-line-mode][Visual Line Mode]]
-      - [[#fix-word][Fix Word]]
+      - [[#fix-word][Fix-Word]]
     - [[#undo][Undo]]
       - [[#add-undo-tree-code-or-package][Add undo-tree code or package]]
     - [[#visual-appearance][Visual Appearance]]
@@ -357,7 +357,7 @@ Here, I add a hook to ensure that =visual-line-mode= applies to LaTeX buffers.
 
 In Org defaults, I set it to apply to =org-mode= as well.
 
-**** Fix Word
+**** Fix-Word
 
 I also want to be able to transform text quickly. The package [[https://github.com/mrkkrp/fix-word][fix-word]] is devoted to some of these cases. In the interests of not loading another package whose innards I never see and that can induce conflicts, I want to try to paste in the relevant code here and see if it seamlessly integrates with my configuration. One concern I have is that in the pursuit of package reduction, I am vastly adding to the number of lines of /this/ file (by, for example, not wanting to create a pseudo-package that simply provides the code from another file.
 *************** TODO Add =fix-word= code
@@ -382,7 +382,7 @@ Splitting windows on a latop like my Thinkpad T440p vs. a larger monitor results
 
 #+BEGIN_SRC emacs-lisp
   (setq split-height-threshold 200)
-  (setq split-width-threshold 0)
+  (setq split-width-threshold 100)
 #+END_SRC
 
 *** Font Management
@@ -985,7 +985,7 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-custom-commands
         '(("g" . "GTD contexts")
-          ("gc" "Computer" tags-todo "@computer")
+          ("gd" "Digital" tags-todo "@digital")
           ("gf" "Food" tags-todo "@food")
           ("gh" "Home" tags-todo "@home")
           ("gn" "Notebook" tags-todo "@notes")
@@ -995,19 +995,21 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
           ("gw" "Writing" tags-todo "@writing")
           ("G" "GTD Block Agenda"
            ((tags-todo "@office")
-            (tags-todo "@computer")
+            (tags-todo "@digital")
             (tags-todo "@home")
+            (tags-todo "@reading")
             (tags-todo "@self")
             (tags-todo "@writing"))
            nil                      ;; i.e., no local settings
            ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
           ))
 
-    (setq org-tag-alist '(("@home" . ?h)
-                          ("@office" . ?o)
-                          ("@computer" .?c)
-                          ("@writing" . ?w)
-                          ("@self" . ?s)))
+  (setq org-tag-alist '(("@home" . ?h)
+                        ("@office" . ?o)
+                        ("@digital" .?d)
+                        ("@reading" . ?r)
+                        ("@writing" . ?w)
+                        ("@self" . ?s)))
 #+END_SRC
 
 *** Bullets
@@ -1041,19 +1043,17 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
     :bind (("C-c c" . org-capture)
            ("C-c w" . org-refile))
     :preface
-    (defvar owl/org-basic-task-template "* TODO [#B] %^{Task} %^g
-              :PROPERTIES:
-              :Created: %U
-              :Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}
-              :END:" "Template for basic task.")
+    (defvar owl/org-basic-task-template
+      "* TODO [#B] %^{Task} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
+      "Template for basic task.")
 
     (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-              :PROPERTIES:
-              :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-              :BIRTHDAY: %^{yyyy-mm-dd}
-              :EMAIL: %(org-contacts-template-email)
-              :NOTE: %^{NOTE}
-              :END:" "Template for org-contacts.")
+                :PROPERTIES:
+                :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+                :BIRTHDAY: %^{yyyy-mm-dd}
+                :EMAIL: %(org-contacts-template-email)
+                :NOTE: %^{NOTE}
+                :END:" "Template for org-contacts.")
 
     (defun owl/org-journal-find-location ()
       ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -1063,13 +1063,14 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
       ;; will add the new entry as a child entry.
       (goto-char (point-min)))
 
-    (setq org-capture-templates `(("t"                                                           ; key
-                                   "task"                                                        ; description
-                                   entry                                                         ; type
-                                   (file "~/org/areas/tasks.org"), owl/org-basic-task-template   ; target
-                                   :prepend nil                                                  ; properties
-                                   :empty-lines 0                                                ; properties
-                                   :created t                                                    ; properties
+    (setq org-capture-templates `(("t"                             ; key
+                                   "scheduled task"                ; description
+                                   entry                           ; type
+                                   (file "~/org/areas/tasks.org"), ; target
+                                   owl/org-basic-task-template     ; template
+                                   :prepend nil                    ; properties
+                                   :empty-lines 0                  ; properties
+                                   :created t                      ; properties
                                    )
                                   ("a"               
                                    "article"         
