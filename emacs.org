@@ -23,6 +23,14 @@ Literate programming is human-centric in the sense that programming code is "tan
 - A way to distinguish packages on MELPA, packages not there, and packages that are experimental, and a way to sandbox non-working packages
 - A way to load a minimally working config that will always have my bare bones
 
+*************** TODO Create working minimal config   :@digital:
+*************** END
+*************** TODO Decide on how to handle picture handling across Areas, Projects, and Resources :@digital:
+*************** END
+*************** TODO Make Projectile work better with Projects :@digital:
+*************** END
+
+
 ** Things That Will Continue to Be Built Out
 
 - A server and publishing system that allows for Wikis, notebooks, and web pages to be created from Org content
@@ -35,7 +43,7 @@ Literate programming is human-centric in the sense that programming code is "tan
 - [[https://github.com/abo-abo/org-download][Org-download]]
 - Possibly some code from [[https://github.com/rnkn/fountain-mode/][Founntain Mode]] (screenwriting)
 - Check out [[https://www.gnu.org/software/emacs-muse/manual/muse.html][Muse]] alongside Org pubishing system. What are my needs?
--  
+- Possible integration of [[https://github.com/novoid/Memacs][Memacs]] someday. 
 
 * Configuration
 :PROPERTIES:
@@ -69,9 +77,8 @@ Literate programming is human-centric in the sense that programming code is "tan
   - [[#global-defaults][Global Defaults]]
     - [[#core-editing][Core Editing]]
       - [[#visual-line-mode][Visual Line Mode]]
-      - [[#fix-word][Fix-Word]]
+      - [[#text-transformation-and-transmutation-fix-word][Text Transformation and Transmutation (=fix-word=)]]
     - [[#undo][Undo]]
-      - [[#add-undo-tree-code-or-package][Add undo-tree code or package]]
     - [[#visual-appearance][Visual Appearance]]
     - [[#font-management][Font Management]]
       - [[#font-locking][Font Locking]]
@@ -81,7 +88,6 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#theme-management][Theme Management]]
       - [[#themes-in-rotation][Themes in Rotation]]
       - [[#writing-theme][Writing Theme]]
-        - [[#link-to-writing-environment-heading-in-this-document][Link to Writing Environment heading in this document]]
       - [[#functions-to-switch-among-themes][Functions to Switch Among Themes]]
     - [[#aggressive-indent][Aggressive Indent]]
   - [[#accessibility][Accessibility]]
@@ -104,7 +110,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
     - [[#agenda][Agenda]]
-      - [[#todo-keywords][‘TODO’ Keywords]]
+      - [[#todo-keywords][~TODO~ Keywords]]
         - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
       - [[#gtd-contexts][GTD Contexts]]
     - [[#bullets][Bullets]]
@@ -140,11 +146,8 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#spellchecking-and-abbreviations][Spellchecking and Abbreviations]]
       - [[#set-dictionary-to-hunspell][Set Dictionary to Hunspell]]
       - [[#flyspell][Flyspell]]
-        - [[#change-aspell-to-hunspell][Change aspell to hunspell]]
-        - [[#make-sure-spellchecker-only-targets-prose-not-code-blocks][Make sure spellchecker only targets prose, not code blocks]]
-      - [[#switch-among-languages][Switch Among Languages]]
+      - [[#switch-among-natural-languages][Switch Among Natural Languages]]
       - [[#access-to-editable-dictionary][Access to Editable Dictionary]]
-        - [[#put-a-copy-in-orgresources][Put a copy in =~/org/resources/=?]]
       - [[#abbrevs][Abbrevs]]
     - [[#editing][Editing]]
     - [[#distraction-free-writing][Distraction-Free Writing]]
@@ -330,9 +333,7 @@ Since the code is automatically compiled during runtime, if the configuration ha
 
 ** Global Defaults
 *** Core Editing
-*************** DONE Investigate whether there is a way to do inline TODOs in Org :ARCHIVE:
-CLOSED: [2018-11-24 Sat 07:41]
-*************** END
+
 
 Some core editing desirables:
 
@@ -358,13 +359,14 @@ Here, I add a hook to ensure that =visual-line-mode= applies to LaTeX buffers.
 
 In Org defaults, I set it to apply to =org-mode= as well.
 
-**** Fix-Word
+**** Text Transformation and Transmutation (=fix-word=)
 
 I also want to be able to transform text quickly. The package [[https://github.com/mrkkrp/fix-word][fix-word]] is devoted to some of these cases. In the interests of not loading another package whose innards I never see and that can induce conflicts, I want to try to paste in the relevant code here and see if it seamlessly integrates with my configuration. One concern I have is that in the pursuit of package reduction, I am vastly adding to the number of lines of /this/ file (by, for example, not wanting to create a pseudo-package that simply provides the code from another file.
-*************** TODO Add =fix-word= code
+
+*************** TODO Add =fix-word= code               :@digital:
 *************** END
 
-
+*************** Archive :ARCHIVE:
 *** Undo
 
 From [[https://www.emacswiki.org/emacs/UndoTree][undo-tree documentation]]:
@@ -375,7 +377,8 @@ Emacs's undo system allows you to recover any past state of a buffer. To do this
 Instead of treating undo/redo as a linear sequence of changes, =undo-tree-mode= treats undo history as a branching tree of changes, similar to the way Vim handles it. This makes it substantially easier to undo and redo any change, while preserving the entire history of past states. The =undo-tree= visualizer is particularly helpful in complex cases. An added side bonus is that undo history can in some cases be stored more efficiently, allowing more changes to accumulate before Emacs starts discarding history. Undo history can be saved persistently across sessions with Emacs 24.3 and later. It also sports various other nifty features: storing and restoring past buffer states in registers, a diff view of the changes that will be made by undoing, and probably more besides.
 #+END_QUOTE
 
-**** TODO Add undo-tree code or package
+*************** TODO Add undo-tree code or package   :@digital:
+*************** END
 
 *** Visual Appearance
 
@@ -454,7 +457,8 @@ I want some elements in Org to be fixed pitch even when variable pitch is being 
 - Beginning and end of source code blocks
 - Tables
 - Verbatim text
-*************** TODO Find out why Org fixed pitch isn’t working for face envirs
+
+*************** TODO Find out why Org fixed pitch isn’t working for face envirs :@digital:
 *************** END
 
 #+BEGIN_SRC emacs-lisp
@@ -499,8 +503,9 @@ Ensure that variable pitches are respected in loaded themes:
 
 Ensure that some common theme packages are installed through ELPA and configured according to creator recommendations. Currently, I am installing the =doom= suite and the =flatui-dark-theme=.
 
-=doom-themes-org-config= corrects and improves Org's native fontification. 
-*************** TODO Check whether =doom-themes-org-config= is set as is.
+=doom-themes-org-config= corrects and improves Org's native fontification.
+ 
+*************** TODO Check whether =doom-themes-org-config= is set as is. :@digital:
 *************** END
 
 #+BEGIN_SRC emacs-lisp
@@ -518,8 +523,8 @@ The =poet-theme= in concert with several packages and tweaks forms the basis for
 
 Because this theme is "special," involving invocation of =olivetti-mode= among other things (=prettify=), I don't consider it a global default and instead set it up under its own heading, 
 
-***** TODO Link to Writing Environment heading in this document
-
+*************** TODO Link to Writing Environment heading in this document :@digital:
+*************** END
 
 **** Functions to Switch Among Themes
 
@@ -555,7 +560,8 @@ In order to prevent overlay, =owl/cycle-theme= depends on on two additional func
 #+END_SRC
 
 The package =pretty-mode= redisplays parts of the Emacs buffer as pretty Unicode symbols. I have it turned off globally.
-*************** TODO Find out/fix why =global-pretty-mode= is displaying globally
+
+*************** TODO Find out/fix why =global-pretty-mode= is displaying globally :@digital:
 *************** END
 
 #+BEGIN_SRC emacs-lisp
@@ -928,14 +934,16 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
     :bind ("C-c a" . org-agenda)
     :custom
     (org-agenda-files (list "~/org/areas/"
-                            "~/org/projects/"))
+                            "~/org/projects/"
+                            "~/.emacs.d/"))
     )
 
 #+END_SRC
-*************** TODO Make org-agenda-files recursive for =~/org/projects/=
+
+*************** TODO [#A] Make org-agenda-files recursive for =~/org/projects/= :@digital:
 *************** END
 
-**** ‘TODO’ Keywords
+**** ~TODO~ Keywords
 
 I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
 
@@ -1240,8 +1248,9 @@ Lee Hinman, in his blog post “[[https://writequit.org/articles/emacs-org-mode-
 With custom IDs, the value of =CUSTOM_ID=, which is set on a per-heading basis in Org within a properties drawer, will be consistent even when headings are inserted in between other headings.
 
 The nicest feature of =org-id= is that these IDs need not be gobbledygook but can be human-friendly names.
-*************** TODO Figure out how to create simpler CUSTOM_IDs
-UUIDs are ugly and unwieldy...
+
+*************** TODO Figure out how to create simpler CUSTOM_IDs :@digital:
+                        UUIDs are ugly and unwieldy.
 *************** END
 
 Hinman provides a private function that defines a personal version of =org-custom-id-get= and creates a new property if one doesn’t already exist.
@@ -1626,7 +1635,8 @@ I’m a little leery about strings such as ~I’m~ replacing ~I'm~, for example.
 Of course, it’s not a misplaced worry for text files that contain code, like the current file. Hence, the major dealbreaker is that smart quote replacements happen in code blocks, which isn’t happening in literate environments that are properly handled. The dangerous function in the package is =smart-quotes-smarten=, which will reach into code blocks and verbatim environments and improperly smarten apostrophes and other semantically meaningful symbols.
 
 The other tweak is to register the new way of spelling contractions with =ispell=. This is accomplished with the following code, which is just displayed here (it’s inactive):
-*************** TODO Add ispell smart-quotes code
+
+*************** TODO Add ispell smart-quotes code    :@digital:
 *************** END
 
 #+BEGIN_EXAMPLE
@@ -1688,10 +1698,13 @@ Here is an awesome hydra to help out:
     ("m" flyspell-mode))
 #+END_SRC
 
-***** TODO Change aspell to hunspell                          :@computer:
-***** TODO Make sure spellchecker only targets prose, not code blocks :@computer:
+*************** TODO Change aspell to hunspell       :@digital:
+*************** END
 
-**** Switch Among Languages
+*************** TODO Make sure spellchecker only targets prose, not code blocks :@digital:
+*************** END
+
+**** Switch Among Natural Languages
 
 #+BEGIN_SRC emacs-lisp
   (bind-key "C-c D"
@@ -1710,9 +1723,8 @@ Here is an awesome hydra to help out:
 
 **** Access to Editable Dictionary
 
-***** TODO Put a copy in =~/org/resources/=?
-***** COMMENT What is this?
-
+*************** TODO Put a copy in =~/org/resources/=? :@digital:
+*************** END
 **** Abbrevs
 
 *** Editing
