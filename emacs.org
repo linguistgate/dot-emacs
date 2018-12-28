@@ -994,9 +994,12 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-custom-commands
         '(("g" . "GTD contexts")
+          ("gc" "Career" tags-todo "@career")
           ("gd" "Digital" tags-todo "@digital")
+          ("ge" "Email" tags-todo "@email")
           ("gf" "Food" tags-todo "@food")
           ("gh" "Home" tags-todo "@home")
+          ("gm" "Financial" tags-todo "@financial")
           ("gn" "Notebook" tags-todo "@notes")
           ("go" "Office" tags-todo "@office")
           ("gr" "Reading" tags-todo "@reading")
@@ -1005,7 +1008,10 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
           ("G" "GTD Block Agenda"
            ((tags-todo "@office")
             (tags-todo "@digital")
+            (tags-todo "@email")
             (tags-todo "@home")
+            (tags-todo "@financial")
+            (tags-todo "@career")
             (tags-todo "@reading")
             (tags-todo "@self")
             (tags-todo "@writing"))
@@ -1015,7 +1021,10 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 
   (setq org-tag-alist '(("@home" . ?h)
                         ("@office" . ?o)
+                        ("@email" . ?e)
+                        ("@career" . ?c)
                         ("@digital" .?d)
+                        ("@financial" . ?m)
                         ("@reading" . ?r)
                         ("@writing" . ?w)
                         ("@self" . ?s)))
