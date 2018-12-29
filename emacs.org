@@ -941,6 +941,7 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
 #+END_SRC
 
 *************** TODO [#A] Make org-agenda-files recursive for =~/org/projects/= :@digital:
+SCHEDULED: <2018-12-28 Fri>
 *************** END
 
 **** ~TODO~ Keywords
@@ -1366,11 +1367,11 @@ I use =org-babel= to embed and process some code in my Org files. Here I initial
 #+BEGIN_SRC emacs-lisp
   (org-babel-do-load-languages
    'org-babel-load-languages '((C . t)
+                               (shell . t)
+                               (makefile . t)
                                (python . t)
                                (gnuplot . t)))
 #+END_SRC
-
-#+RESULTS:
 
 *** Habits (=org-habit=)
 
