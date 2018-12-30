@@ -1609,8 +1609,21 @@ A hook is available to add drag-and-drop functionality to =dired=.
 
 **** Org-Download Configuration
 
+I value different projects having the flexibility to have local image sources, if needed, so =org-download='s ability to set this on a file-by-file basis is powerful.
+
+Given the P.A.R.A. setup I favor, images should be stored in a location that reflects their associaiton with a specific task, an area, a project, or a resource. Large image collections that aren't part of a particular project can be put into =org/resources/image-collections=, for example.
+
+The crucial issue, and the reason I'm spending some time thinking through this, is that transportability has often become an issue. Every time I start a new setup, the image files don't seem to "come along" and broken links abound. It should be very clear why an image is being downloaded, and there should not be insane proliferation of =/img= directories.
+
+Hence:
+
+1. 
+
 #+BEGIN_SRC emacs-lisp
-  (use-package org-download)
+  (use-package org-download
+    :config
+    ; Adds dired drag-and-drop support via hook
+    (add-hook 'dired-mode-hook 'org-download-enable))
 #+END_SRC
 
 *** Web Page Achiving
