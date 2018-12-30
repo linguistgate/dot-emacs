@@ -139,11 +139,12 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#list-of-publishing-projects][List of Publishing Projects]]
     - [[#toc-org][Toc-org]]
     - [[#writing][Writing]]
-  - [[#retrieval-and-archiving][Retrieval and Archiving]]
+  - [[#attachments][Attachments]]
+    - [[#attachments-1][Attachments]]
+    - [[#web-archiving][Web Archiving]]
     - [[#image-retrieval][Image Retrieval]]
       - [[#summary-of-documentation][Summary of Documentation]]
       - [[#org-download-configuration][Org-Download Configuration]]
-    - [[#web-page-achiving][Web Page Achiving]]
   - [[#writing-environment][Writing Environment]]
     - [[#poet-theme][Poet Theme]]
       - [[#consider-worries-below-about-writing-config][Consider worries below about writing config]]
@@ -1558,11 +1559,21 @@ Here I establish the set of publishing projects detailed above. Note that some o
 
 My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]
 
-** Retrieval and Archiving
+** Attachments
+
+*** Attachments
+
+In general, I use Org-Mode’s built-in attachment machinery.
+
+Given the P.A.R.A. setup I favor, images should be stored in a location that reflects their associaiton with a specific task, an area, a project, or a resource. Large image collections that aren't part of a particular project can be put into =org/resources/image-collections=, for example.
+
+The attachment machinery defaults to creating a =data= directory, under which attachments are stored.
+
+*** Web Archiving
 
 *** Image Retrieval
 
-The MELPA package [[https://github.com/abo-abo/org-download][org-download]] is an excellent way to incorporate drag-and-drop abilities into my Org-Mode workflow.
+The MELPA package [[https://github.com/abo-abo/org-download][org-download]] is one way to incorporate drag-and-drop abilities into my Org-Mode workflow.
 
 **** Summary of Documentation
 
@@ -1600,7 +1611,7 @@ The *target* can be the following:
         - Level count starts at 0 (=*= is 0, =**= is 1, etc.)
         - Each file can customize this value:
           #+BEGIN_SRC emacs-lisp :tangle no
-            -*- mode: Org; org-download-heaidng-lvl: nil; -*-
+            -*- mode: Org; org-download-heading-lvl: nil; -*-
           #+END_SRC
 
 Optionally, a timestamp can be added to the filename: =org-download-timestamp=. The backend, =org-download-backend= can also choose among =url-receive= (default), =curl=, or =wget=.
@@ -1611,13 +1622,7 @@ A hook is available to add drag-and-drop functionality to =dired=.
 
 I value different projects having the flexibility to have local image sources, if needed, so =org-download='s ability to set this on a file-by-file basis is powerful.
 
-Given the P.A.R.A. setup I favor, images should be stored in a location that reflects their associaiton with a specific task, an area, a project, or a resource. Large image collections that aren't part of a particular project can be put into =org/resources/image-collections=, for example.
-
-The crucial issue, and the reason I'm spending some time thinking through this, is that transportability has often become an issue. Every time I start a new setup, the image files don't seem to "come along" and broken links abound. It should be very clear why an image is being downloaded, and there should not be insane proliferation of =/img= directories.
-
-Hence:
-
-1. 
+I don’t like that when it creates a secondary directory (via =org-download--dir-2= in the code), it accomplishes this by pulling the /entire/ heading, which is very often capitalized with spaces. But if I’m consistent with normal Org-Mode attachment machinery, setting the header-specific property to the default value will result in an /identiical/ directory, capitalized and spaced. I think this comes down to an obsession with making every single directory Linux-like: sometimes, a directory should mimic the actual text. There is little that would /ever/ be affected by having capitalizations and spaces deep inside an image directory.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-download
@@ -1625,8 +1630,6 @@ Hence:
     ; Adds dired drag-and-drop support via hook
     (add-hook 'dired-mode-hook 'org-download-enable))
 #+END_SRC
-
-*** Web Page Achiving
 
 
 
