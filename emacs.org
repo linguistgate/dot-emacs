@@ -139,6 +139,11 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#list-of-publishing-projects][List of Publishing Projects]]
     - [[#toc-org][Toc-org]]
     - [[#writing][Writing]]
+  - [[#retrieval-and-archiving][Retrieval and Archiving]]
+    - [[#image-retrieval][Image Retrieval]]
+      - [[#summary-of-documentation][Summary of Documentation]]
+      - [[#org-download-configuration][Org-Download Configuration]]
+    - [[#web-page-achiving][Web Page Achiving]]
   - [[#writing-environment][Writing Environment]]
     - [[#poet-theme][Poet Theme]]
       - [[#consider-worries-below-about-writing-config][Consider worries below about writing config]]
@@ -941,7 +946,7 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
 #+END_SRC
 
 *************** TODO [#A] Make org-agenda-files recursive for =~/org/projects/= :@digital:
-SCHEDULED: <2018-12-29 Sat>
+SCHEDULED: <2018-12-31 Mon>
 *************** END
 
 **** ~TODO~ Keywords
@@ -1552,6 +1557,66 @@ Here I establish the set of publishing projects detailed above. Note that some o
 *** Writing
 
 My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]
+
+** Retrieval and Archiving
+
+*** Image Retrieval
+
+The MELPA package [[https://github.com/abo-abo/org-download][org-download]] is an excellent way to incorporate drag-and-drop abilities into my Org-Mode workflow.
+
+**** Summary of Documentation
+
+The exentsion is about /moving images/ from two points. Those two points can be external or internal to my system.
+
+The *source* can be the following:
+
+1. Image on browser
+2. Image in local file system
+3. Local or remote /image address/ in kill-ring
+   - =org-download-yank=
+   - =Ow= in =dired= can get address
+4. A screenshot using =scrot= or similar
+   - =org-download-screenshot=
+   - Customizable in backend with =org-download-screenshot-method=
+
+The *target* can be the following:
+
+1. ='attach= :: use =org-mode= attachment machinery
+2. ='directory= :: construct the directory in two stages:
+   1. *First part of folder* name is
+      - either =.= (curent folder)
+      - or =org-download-image-dir= (if it's not =nil=)
+        - becomes buffer-local when set so *each file can customize this value*:
+          #+BEGIN_SRC emacs-lisp :tangle no
+            -*- mode: Org; org-download-image-dir: "~/Pictures/foo"; -*-
+          #+END_SRC
+        - =org-download-dir= can be set for all files at once:
+          #+BEGIN_SRC emacs-lisp :tangle no
+            (setq-default org-download-image-dir "~/Pictures/foo")
+          #+END_SRC
+   2. *Second part of folder name* is
+      - =org-download-heading-lvl= set to =""= (nil)
+      - =org-download-heading-lvl= is =n= (name of the current heading with level /n/).
+        - Level count starts at 0 (=*= is 0, =**= is 1, etc.)
+        - Each file can customize this value:
+          #+BEGIN_SRC emacs-lisp :tangle no
+            -*- mode: Org; org-download-heaidng-lvl: nil; -*-
+          #+END_SRC
+
+Optionally, a timestamp can be added to the filename: =org-download-timestamp=. The backend, =org-download-backend= can also choose among =url-receive= (default), =curl=, or =wget=.
+
+A hook is available to add drag-and-drop functionality to =dired=.
+
+**** Org-Download Configuration
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-download)
+#+END_SRC
+
+*** Web Page Achiving
+
+
+
 ** Writing Environment
 :PROPERTIES:
 :CUSTOM_ID: writing-environment
