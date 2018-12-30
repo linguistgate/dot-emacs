@@ -941,7 +941,7 @@ A =TODO= item in an Areas file can imply either a repeating task, a onetime task
 #+END_SRC
 
 *************** TODO [#A] Make org-agenda-files recursive for =~/org/projects/= :@digital:
-SCHEDULED: <2018-12-28 Fri>
+SCHEDULED: <2018-12-29 Sat>
 *************** END
 
 **** ~TODO~ Keywords
@@ -1067,12 +1067,12 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
       "Template for basic task.")
 
     (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-                  :PROPERTIES:
-                  :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-                  :BIRTHDAY: %^{yyyy-mm-dd}
-                  :EMAIL: %(org-contacts-template-email)
-                  :NOTE: %^{NOTE}
-                  :END:" "Template for org-contacts.")
+                    :PROPERTIES:
+                    :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+                    :BIRTHDAY: %^{yyyy-mm-dd}
+                    :EMAIL: %(org-contacts-template-email)
+                    :NOTE: %^{NOTE}
+                    :END:" "Template for org-contacts.")
 
     (defun owl/org-journal-find-location ()
       ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -1148,6 +1148,11 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                    :empty-lines 0
                                    :created t
                                    )
+                                  ("f" "Fitness")
+                                  ("fw" "Weight" 
+                                   table-line
+                                   "| | %U | %^{Weight} | %^{Comment}"
+                                   :immediate-finish t)
                                   ("s"
                                    "selected org-protocol link"
                                    entry
@@ -1161,6 +1166,25 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                   )
           )
     )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun ap/org-call-src-block (name)
+  ;; Based on <http://kitchingroup.cheme.cmu.edu/blog/2014/08/11/Using-org-mode-outside-of-Emacs-sort-of/>
+  ;; This works better than the org-sbe (aka sbe) macro, because it
+  ;; calls the block upon expansion, making it difficult to bind to
+  ;; a command to run later
+  ;; TODO: Use `org-babel-goto-named-src-block'!  I guess it's new...or not, it's from 2010!
+  (org-with-wide-buffer
+   (-when-let (src (org-element-map (org-element-parse-buffer) 'src-block
+                     (lambda (element)
+                       (when (string= name (org-element-property :name element))
+                         element))
+                     nil ;info
+                     t ))
+     (goto-char (org-element-property :begin src))
+     (let ((org-confirm-babel-evaluate nil))
+       (org-babel-execute-src-block)))))
 #+END_SRC
 
 **** Setting some Refile behaviors
