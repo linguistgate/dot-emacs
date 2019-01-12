@@ -110,6 +110,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
     - [[#agenda][Agenda]]
+      - [[#super-agenda][Super Agenda]]
       - [[#todo-started-done-keywords][~TODO-STARTED-DONE~ Keywords]]
         - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
       - [[#gtd-contexts][GTD Contexts]]
@@ -949,7 +950,7 @@ But ... what prevented me from taking this route of using recursion was that som
                               (lambda (directory)
                                 (directory-files-recursively
                                  directory org-agenda-file-regexp))
-                              '("~/org/captures/"
+                              '("~/org/resources/captures/"
                                 "~/org/areas/"
                                 "~/.emacs.d/")))
                       )
@@ -982,6 +983,30 @@ The method leaves out all of the project Org files stuck deeper in each Area, so
 *************** DONE [#A] Make org-agenda-files recursive for =~/org/areas/= :@digital:
 SCHEDULED: <2019-01-12 Sat>
 *************** END
+**** Super Agenda
+
+I am currently using the package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] to provide nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-super-agenda
+    :init (org-super-agenda-mode)
+    :config (setq org-super-agenda-groups
+                  '((:name "Today"
+                           :scheduled today)
+                    (:name "Important"
+                           :priority "A")
+                    (:log t)
+                    (:name "Schedule"
+                           :time-grid t)
+                    (:habit t)
+                    (:name "Due today"
+                           :deadline today)
+                    (:name "Overdue"
+                           :deadline past)
+                    (:name "Due soon"
+                           :deadline future)))
+    )
+#+END_SRC
 
 **** ~TODO-STARTED-DONE~ Keywords
 
@@ -1181,7 +1206,7 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                   ("e"
                                    "elfeed"
                                    entry
-                                   (file "~/org/captures/captures.org")
+                                   (file "~/org/resources/captures/captures.org")
                                    "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
                                    :prepend nil
                                    :empty-lines 0
