@@ -995,7 +995,6 @@ I am currently using the package [[https://github.com/alphapapa/org-super-agenda
                            :scheduled today)
                     (:name "Important"
                            :priority "A")
-                    (:log t)
                     (:name "Schedule"
                            :time-grid t)
                     (:habit t)
@@ -1004,7 +1003,10 @@ I am currently using the package [[https://github.com/alphapapa/org-super-agenda
                     (:name "Overdue"
                            :deadline past)
                     (:name "Due soon"
-                           :deadline future)))
+                           :deadline future)
+                    (:name "Books to read"
+                           :and (:todo "TOREAD" :tag "@reading"))
+                    (:discard (:anything t))))
     )
 #+END_SRC
 
@@ -1015,6 +1017,8 @@ I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "STARTED(s)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "IDEA(i)")
+                (sequence "TOREAD(r)" "|" "FINISHED-READING(f)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
 
 #+END_SRC
