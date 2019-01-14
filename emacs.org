@@ -1017,7 +1017,7 @@ I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "STARTED(s)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "IDEA(i)")
+                (sequence "IDEA(i)" | "SOMEDAY(s)" )
                 (sequence "TOREAD(r)" "|" "FINISHED-READING(f)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
 
