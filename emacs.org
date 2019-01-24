@@ -1017,7 +1017,7 @@ I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "STARTED(s)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "IDEA(i)" | "SOMEDAY(s)" )
+                (sequence "IDEA(i)" "|" "SOMEDAY(s)")
                 (sequence "TOREAD(r)" "|" "FINISHED-READING(f)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
 
@@ -1274,7 +1274,7 @@ I don't like the huge list of refile targets.
 All "areas" are included in the =~/org= directory itself. Soft-linking to a separate =~/areas= folder can result in disasters for /certain/ cloud-based repositories I'm currently using (perhaps not forever).
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 5)
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 8)
                              ("~/org/notebook/notebook.org" :maxlevel . 5)))
 
 #+END_SRC
