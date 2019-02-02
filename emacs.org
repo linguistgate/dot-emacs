@@ -341,7 +341,6 @@ Since the code is automatically compiled during runtime, if the configuration ha
 ** Global Defaults
 *** Core Editing
 
-
 Some core editing desirables:
 
 - The variable =truncate-lines= turns off wrapping. Long lines will show a continuation character in the right margin. /It is currenlty set to nil./
@@ -399,7 +398,7 @@ Splitting windows on a latop like my Thinkpad T440p vs. a larger monitor results
 *** Font Management
 **** Font Locking
 
-At present I have font locking turned on everywhere. Font Lock mode is a minor mode, always local to a particular buffer, and each buffer's major made tells Font Lock mode which text to fontify (add faces to). A programming language, for instance, will have rules about fontifying syntactically relevant constructs like comments, strings, and function names (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html][the GNU Emacs manual]]).
+At present I have font locking turned off globally. Font Lock mode is a minor mode, always local to a particular buffer, and each buffer's major made tells Font Lock mode which text to fontify (add faces to). A programming language, for instance, will have rules about fontifying syntactically relevant constructs like comments, strings, and function names (from [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html][the GNU Emacs manual]]).
 
 #+BEGIN_SRC emacs-lisp
   (global-font-lock-mode nil)
@@ -592,7 +591,7 @@ Because I mainly use Lisp and Python, I want aggressive indenting to be specific
 ** Accessibility
 *** Hinting
 
-Remembering custom functions ...
+To remember all custom functions I create (=owl/NAME=), the following function will help format a simple table:
 
 #+BEGIN_SRC emacs-lisp
   (defun owl/remember-all-custom-functions ()
@@ -608,7 +607,7 @@ Remembering custom functions ...
       res))
 #+END_SRC
 
-My use of the =which-key= package ...
+The [[https://github.com/justbur/emacs-which-key][which-key]] package displays available keybindings in popup:
 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -619,9 +618,9 @@ My use of the =which-key= package ...
   (setq which-key-max-description-length 60))
 #+END_SRC
 
-The =helpful= package allows 
+The [[https://github.com/Wilfred/helpful][helpful]] package provides better contextual information:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (use-package helpful
   :bind
   ("C-h f" . helpful-function)
@@ -827,8 +826,7 @@ I love Deft; I hope it stays fast.
 
 ** Org-Mode
 
-Include the newer version of org-mode, favoring over the built-in one. Manually remove the org directories from the load path, to ensure the version we
-want is prioritized instead.
+Include the newer version of org-mode, favoring over the built-in one. Manually remove the org directories from the load path, to ensure the version we want is prioritized instead.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
@@ -1162,7 +1160,7 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                   ("t"                             ; key
                                    "scheduled task"                ; description
                                    entry                           ; type
-                                   (file "~/org/tasks.org"),       ; target
+                                   (file "~/org/areas/tasks.org"), ; target
                                    owl/org-basic-task-template     ; template
                                    :prepend nil                    ; properties
                                    :empty-lines 0                  ; properties
