@@ -741,7 +741,7 @@ Counsel allows me to utilize ivy by replacing many built-in and common functions
 
 *** Swiper
 
-Swiper is an awesome searching utility with a quick preview. Let's install it and load it when =swiper= or =swiper-all= is called.
+Swiper is a searching utility with quick preview in minibuffer. I load it when =swiper= or =swiper-all= is called.
 
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
@@ -812,8 +812,6 @@ I install Deft via the =use-package= macro and keep its configuration relatively
 The main notetaking directory, a sort of Wiki and Commonplace Book repository, is =~/org/notebook=. Most of the files here will be Org files, though that's not a given.
 
 I bind Deft to =<f8>=.
-
-I love Deft; I hope it stays fast.
 
 ** Navigation
 *** Uniquify
@@ -1477,6 +1475,13 @@ To create a habit, you need two things:
 1. A SCHEDULED tag with a repeat specification (like .+ or ++), and
 2. A STYLE property set to the value habit.
 #+END_QUOTE
+
+I like my habit graph to show throughout the day even if I’ve already completed a habit, so I adjust =org-habit-show-all-today=:
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-habit-show-all-today t)
+#+END_SRC
+
 
 *** Reference and Resource Management (=org-ref= and others)
 
