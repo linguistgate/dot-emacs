@@ -946,7 +946,7 @@ But ... what prevented me from taking this route of using recursion was that som
                               (lambda (directory)
                                 (directory-files-recursively
                                  directory org-agenda-file-regexp))
-                              '("~/org/resources/captures/"
+                              '("~/org/captures/"
                                 "~/org/areas/"
                                 "~/.emacs.d/")))
                       )
