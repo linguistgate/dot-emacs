@@ -106,40 +106,38 @@ Literate programming is human-centric in the sense that programming code is "tan
   - [[#navigation][Navigation]]
     - [[#uniquify][Uniquify]]
     - [[#dired][Dired]]
-  - [[#org-mode][Org-Mode]]
+  - [[#org-mode-initialization-and-defaults][Org-Mode Initialization and Defaults]]
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
-    - [[#agenda][Agenda]]
-      - [[#super-agenda][Super Agenda]]
-      - [[#todo-started-done-keywords][~TODO-STARTED-DONE~ Keywords]]
-        - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
-      - [[#gtd-contexts][GTD Contexts]]
-    - [[#bullets][Bullets]]
-    - [[#capture-and-refile][Capture and Refile]]
-      - [[#apologia][Apologia]]
-      - [[#capture-code-org-capture][Capture Code (=org-capture=)]]
-      - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
-      - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
+  - [[#agenda][Agenda]]
+    - [[#super-agenda][Super Agenda]]
+    - [[#todo-started-done-keywords][~TODO-STARTED-DONE~ Keywords]]
+      - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
+    - [[#gtd-contexts][GTD Contexts]]
+  - [[#org-bullets][Org Bullets]]
+  - [[#org-capture-and-refile][Org Capture and Refile]]
+    - [[#apologia][Apologia]]
+    - [[#capture-code-org-capture][Capture Code (=org-capture=)]]
+    - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
+    - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
     - [[#clock][Clock]]
-    - [[#contacts-org-contacts][Contacts (=org-contacts=)]]
-      - [[#rant][Rant]]
-      - [[#setup][Setup]]
-    - [[#encryption][Encryption]]
-    - [[#file-system-viewing][File System Viewing]]
-    - [[#custom-ids-org-id][Custom IDs (=org-id=)]]
-    - [[#journal-org-journal][Journal (=org-journal=)]]
-      - [[#comment][COMMENT]]
-    - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
-    - [[#habits-org-habit][Habits (=org-habit=)]]
-    - [[#reference-and-resource-management-org-ref-and-others][Reference and Resource Management (=org-ref= and others)]]
-      - [[#org-ref][Org-Ref]]
-      - [[#annotation][Annotation]]
-    - [[#publishing][Publishing]]
-      - [[#blogging-completely-within-org][Blogging Completely Within Org]]
-      - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
-      - [[#list-of-publishing-projects][List of Publishing Projects]]
-    - [[#toc-org][Toc-org]]
-    - [[#writing][Writing]]
+  - [[#contacts-org-contacts][Contacts (=org-contacts=)]]
+    - [[#rant][Rant]]
+    - [[#setup][Setup]]
+  - [[#encryption][Encryption]]
+  - [[#org-custom-ids-org-id][Org Custom IDs (=org-id=)]]
+  - [[#org-journal-org-journal][Org Journal (=org-journal=)]]
+    - [[#comment][COMMENT]]
+  - [[#org-progrmaming-languages-org-babel][Org Progrmaming Languages (=org-babel=)]]
+  - [[#habits-org-habit][Habits (=org-habit=)]]
+  - [[#reference-and-resource-management-org-ref-and-others][Reference and Resource Management (=org-ref= and others)]]
+    - [[#org-ref][Org-Ref]]
+    - [[#annotation][Annotation]]
+  - [[#publishing][Publishing]]
+    - [[#blogging-completely-within-org][Blogging Completely Within Org]]
+    - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
+    - [[#list-of-publishing-projects][List of Publishing Projects]]
+  - [[#toc-org][Toc-org]]
   - [[#attachments][Attachments]]
     - [[#attachments-1][Attachments]]
     - [[#web-archiving][Web Archiving]]
@@ -822,7 +820,7 @@ I bind Deft to =<f8>=.
 # (use-package dired-narrow)
 # (use-package dired-collapse)
 
-** Org-Mode
+** Org-Mode Initialization and Defaults
 
 Include the newer version of org-mode, favoring over the built-in one. Manually remove the org directories from the load path, to ensure the version we want is prioritized instead.
 
@@ -903,7 +901,7 @@ Org-modules' individual behavior is established under their own headings below (
 - =org-irc=
 - =org-w3m=
 
-*** Agenda
+** Agenda
 
 My intent is for the agenda to be the central *digital* hub of my activities at work, home, and elsewhere. It "speaks" to be hipster planner. This is part of a concerted and meaningful effort to make sure my calendars are in my direct control. I use Google products to interface with colleagues, friends, and families who use it. Google is not the center of my digital life.
 
@@ -979,7 +977,7 @@ The method leaves out all of the project Org files stuck deeper in each Area, so
 *************** DONE [#A] Make org-agenda-files recursive for =~/org/areas/= :@digital:
 SCHEDULED: <2019-01-12 Sat>
 *************** END
-**** Super Agenda
+*** Super Agenda
 
 I am currently using the package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] to provide nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
 
@@ -1006,7 +1004,7 @@ I am currently using the package [[https://github.com/alphapapa/org-super-agenda
     )
 #+END_SRC
 
-**** ~TODO-STARTED-DONE~ Keywords
+*** ~TODO-STARTED-DONE~ Keywords
 
 I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
 
@@ -1032,7 +1030,7 @@ In order for dependencies among these keywords to work, triggers must be imposed
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 #+END_SRC
 
-***** Fast ‘TODO’ Selection
+**** Fast ‘TODO’ Selection
 
  Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu.
 
@@ -1052,7 +1050,7 @@ The setting
 
 allows changing todo states with S-left and S-right skipping all of the normal processing when entering or leaving a todo state. This cycles through the todo states but skips setting timestamps and entering notes which is very convenient when all you want to do is fix up the status of an entry. 
 
-**** GTD Contexts
+*** GTD Contexts
 
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
 
@@ -1095,7 +1093,7 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
                         ("@self" . ?s)))
 #+END_SRC
 
-*** Bullets
+** Org Bullets
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
@@ -1103,11 +1101,11 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
     :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
 #+END_SRC
 
-*** Capture and Refile
+** Org Capture and Refile
 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
 
-**** Apologia
+*** Apologia
 
 I provide two templates for captures, =owl/org-basic-task-template= and =owl/org-contacts/template=.
 
@@ -1117,7 +1115,7 @@ I find it irksome to have to file a task into a specific file when I just want t
 
 So the =tasks.org= remains important. It has the flavor of my old =organizer.org= file, but it is intended to be just as wild and unstructured as =captures.org=. For instance, it is not a file to develop projects in. If I am starting to add subtasks, I should pause and say, “This is a mini-project; this is not the point of =tasks.org=.” The ideal =tasks.org= file is one with very few open tasks and lots of archived ones.
 
-**** Capture Code (=org-capture=)
+*** Capture Code (=org-capture=)
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-capture
@@ -1251,7 +1249,7 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
        (org-babel-execute-src-block)))))
 #+END_SRC
 
-**** Setting some Refile behaviors
+*** Setting some Refile behaviors
 
 I like =org-refile= to be promiscuous. To that end, it should use outline paths, complete in steps, and allow for the creation of parent nodes on-the-fly. See See https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html for details on some of the hacks here.
 
@@ -1265,7 +1263,7 @@ I don't like the huge list of refile targets.
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 #+END_SRC
 
-**** Refile targets: Integration with P.A.R.A.
+*** Refile targets: Integration with P.A.R.A.
 
 All "areas" are included in the =~/org= directory itself. Soft-linking to a separate =~/areas= folder can result in disasters for /certain/ cloud-based repositories I'm currently using (perhaps not forever).
 
@@ -1296,9 +1294,9 @@ Currently, I bind it to =C-c g= and focus only on the =captures.org= file and se
 
 *** Clock
 
-*** Contacts (=org-contacts=)
+** Contacts (=org-contacts=)
 
-**** Rant
+*** Rant
 
 I’ve used BBDB in the past, and I like it. But =org-contacts= makes a lot of sense to me.
 
@@ -1306,7 +1304,7 @@ What is of paramount importance to me is to have a local, plain-text file of my 
 
 (Again, this isn’t to say I won’t use Google Contacts, especially in work contexts, or other contact software that interfaces seamlessly with smartphones. But that’s not the point. The point is that I should have primary ownership of my contact information, and plain text just makes sense.)
 
-**** Setup
+*** Setup
 
 But this all seems a little underpowered, and I have a huge bbdb database that I’d like to use (with former addresses, etc.).
 
@@ -1325,13 +1323,10 @@ But this all seems a little underpowered, and I have a huge bbdb database that I
     :custom (org-contacts-files '("~/org/resources/contacts/contacts.org")))
 #+END_SRC
 
-***** COMMENT Requires more thought -- bbdb vs org-contacts
+**** COMMENT Requires more thought -- bbdb vs org-contacts
 
-*** Encryption
-*** File System Viewing
-
-
-*** Custom IDs (=org-id=)
+** Encryption
+** Org Custom IDs (=org-id=)
 
 Custom IDs allow internal linking within a document to work well.
 
@@ -1386,7 +1381,7 @@ The following helper function interactively adds custom IDs to all headlines in 
     (org-map-entries (lambda () (owl/org-custom-id-get (point) 'create))))
 #+END_SRC
 
-*** Journal (=org-journal=)
+** Org Journal (=org-journal=)
 
 I am considering using =org-journal= as a daily tracker as part of my “Notebook” directory project. For now, I just lay out some basic code.
 
@@ -1403,7 +1398,7 @@ I have a directory under =~/org/notebook=, =journal/=, that keeps the journal fi
 
 #+END_SRC
 
-**** COMMENT
+*** COMMENT
 
 I was temporarily using =org-journal= as a way to capture daily tasks that don’t fall neatly into project cycles. These should be tasks that can be marked with a GTD tag (e.g., =@home=, =@errands=, etc.). In concert with project deadlines, recurring area deadlines (habits and things like oil changes), “tasks” are simply those items that don’t fall neatly into other categories. I create a separate directory, =~/org/areas/tasks=, which =org-journal= points to in creating day-by-day journal files. By default, =org-journal= will push tasks to the next day if they are not marked as complete. This satisfactorily replicates bullet journal practices and makes =org-journal= useful as a general GTD task organizer./ The =:custom= block establishes the location of the agenda and enforces =org-agenda= integration. /Changing the output file format has resulted in a number of bugs (i.e., non-carryover, non-automatic invocation of =Journal= mode, etc./
 
@@ -1446,7 +1441,7 @@ entry
 2. It is cumbersome overhead for something quite simple: a catch-all task list
 3. It has lots of bugs or behaviors that seem unexpected, given default settings.
 
-*** Progrmaming Languages (=org-babel=)
+** Org Progrmaming Languages (=org-babel=)
 
 I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
 
@@ -1463,7 +1458,7 @@ I use =org-babel= to embed and process some code in my Org files. Here I initial
                                (gnuplot . t)))
 #+END_SRC
 
-*** Habits (=org-habit=)
+** Habits (=org-habit=)
 
 Habit tracking via =org-habit= will show a graph in the agenda tracking progress and consistency for established habits. I think it's a good idea to keep the set of habits small and specific.
 
@@ -1483,9 +1478,9 @@ I like my habit graph to show throughout the day even if I’ve already complete
 #+END_SRC
 
 
-*** Reference and Resource Management (=org-ref= and others)
+** Reference and Resource Management (=org-ref= and others)
 
-**** Org-Ref
+*** Org-Ref
 
 Integration of resources and references
 
@@ -1502,7 +1497,7 @@ I want to avoid Helm and Reftex as backends, so =org-ref= provides a way to use 
           ))
 #+END_SRC
 
-**** Annotation
+*** Annotation
 
 I use Sebastian Christ’s [[https://github.com/rudolfochrist/interleave][interleave]] package.
 
@@ -1512,7 +1507,7 @@ I use Sebastian Christ’s [[https://github.com/rudolfochrist/interleave][interl
 
 Emacs and PDF integration.
 
-*** Publishing
+** Publishing
 
 My publishing needs are changing a lot. This will fill out once I've decided on something that is reliable.
 
@@ -1524,7 +1519,7 @@ My publishing needs are changing a lot. This will fill out once I've decided on 
   (use-package ox-tufte)
 #+END_SRC
 
-**** Blogging Completely Within Org
+*** Blogging Completely Within Org
 
 Frustrated by Jekyll, tired of the extra steps to render a static blog in Hugo, I’m interested in trying an Org-specific option.
 
@@ -1567,7 +1562,7 @@ I want the CSS to be rendered using Tufte, so we’ll see how this all pans out 
 
 #+END_SRC
 
-**** Publishing Notebooks to a Private Website
+*** Publishing Notebooks to a Private Website
 
 I want to publish my notebooks (main, programming, etc.) to a "private" HTML directory that displays as a webpage. This code, inspired by Pavel Panchekha's [[https://pavpanchekha.com/blog/org-mode-publish.html][blog post on the matter]], helps to accomplish that aim.
 
@@ -1585,7 +1580,7 @@ The actual publishing takes place in =publish.el= stored in the =/etc= directory
 
 NEED TO THINK MORE ABOUT THIS. DON'T WANT DUPLICATION.
 
-**** List of Publishing Projects 
+*** List of Publishing Projects 
 
 Here I establish the set of publishing projects detailed above. Note that some of these depend on Git hooks to function properly (e.g., the =www= project).
 
@@ -1612,7 +1607,7 @@ Here I establish the set of publishing projects detailed above. Note that some o
            :publishing-function org-publish-attachment)))
 #+END_SRC
 
-*** Toc-org
+** Toc-org
  Let's install and load the =toc-org= package after org mode is loaded. This is the
  package that automatically generates an up to date table of contents for us.
 
@@ -1621,10 +1616,6 @@ Here I establish the set of publishing projects detailed above. Note that some o
      :after org
      :init (add-hook 'org-mode-hook #'toc-org-enable))
  #+END_SRC
-
-*** Writing
-
-My writing configuration, which centers on Org Mode, is described in its [[#writing-environment][own section]
 
 ** Attachments
 
