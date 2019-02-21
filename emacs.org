@@ -1206,7 +1206,7 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                   ("e"
                                    "elfeed"
                                    entry
-                                   (file "~/org/resources/captures/captures.org")
+                                   (file "~/org/captures/captures.org")
                                    "* %a  %^G \n:LOGBOOK:\n:CAPTURED: %U\n:END:\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n" 
                                    :prepend nil
                                    :empty-lines 0
@@ -1220,12 +1220,12 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                   ("s"
                                    "selected org-protocol link"
                                    entry
-                                   (file "~/org/resources/captures/captures.org")
+                                   (file "~/org/captures/captures.org")
                                    "* %^{Title}\nSource: %u, [[%:link][%:description]] \n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
                                   ("p" 
                                    "org-protocol-link"
                                    entry
-                                   (file "~/org/resources/captures/captures.org")
+                                   (file "~/org/captures/captures.org")
                                    "* %? [[%:link][%:description]] \nCaptured On: %U")				
                                   )
           )
@@ -1285,7 +1285,7 @@ Currently, I bind it to =C-c g= and focus only on the =captures.org= file and se
   (use-package org-randomnote
     :ensure t
     :bind ("C-c g" . org-randomnote)
-    :config (setq org-randomnote-candidates '("~/org/resources/captures/captures.org"
+    :config (setq org-randomnote-candidates '("~/org/captures/captures.org"
                                               "~/org/areas/digital/digital.org"
                                               "~/org/areas/hiking/survival.org"
                                               "~/org/areas/writing/writing.org"
