@@ -1128,13 +1128,17 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
       "* TODO [#B] %^{Task} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
       "Template for basic task.")
 
+    (defvar owl/org-basic-daybook-template
+      "* TODO [#B] %(format-time-string org-journal-time-format)%^{Task} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
+      "Template for basic daybook task entry.")
+
     (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-                    :PROPERTIES:
-                    :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-                    :BIRTHDAY: %^{yyyy-mm-dd}
-                    :EMAIL: %(org-contacts-template-email)
-                    :NOTE: %^{NOTE}
-                    :END:" "Template for org-contacts.")
+                      :PROPERTIES:
+                      :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+                      :BIRTHDAY: %^{yyyy-mm-dd}
+                      :EMAIL: %(org-contacts-template-email)
+                      :NOTE: %^{NOTE}
+                      :END:" "Template for org-contacts.")
 
     (defun owl/org-journal-find-location ()
       ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -1162,6 +1166,12 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
                                    :empty-lines 0                  ; properties
                                    :created t                      ; properties
                                    )
+                                  ("d"
+                                   "daybook entry"
+                                   entry
+                                   (function owl/org-journal-find-location),
+                                   owl/org-basic-daybook-template     ; template
+                                   :empty-lines 1)
                                   ("a"               
                                    "article"         
                                    entry             
@@ -1393,7 +1403,7 @@ I’ve had problems in the past rolling this out (see Comment below), but I am t
   (use-package org-journal
     :after org
     :custom
-    (org-journal-dir "~/org/areas/tasks")      ; location
+    (org-journal-dir "~/org/daybook")      ; location
     (org-journal-enable-agenda-integration t)  ; ensure entries are on the agenda
     )
   (org-journal-update-auto-mode-alist)
@@ -1412,14 +1422,21 @@ I also specify an =org-capture= template that inserts a =TODO= heading, timestam
       (goto-char (point-min)))
 #+END_EXAMPLE
 
-The capture block prompts for a task title /and/ a tag; the tag is drawn in tags in the completion file and defaults to what I want, namely, the set of GTD context tags.
+The capture block prompts for a task title, tag, and effort estimate; the tag is drawn in tags in the completion file and defaults to what I want, namely, the set of GTD context tags.
 
 #+BEGIN_EXAMPLE
-("j"
-"org-journal task" 
-entry 
-(function owl/org-journal-find-location)
-"* TODO %(format-time-string org-journal-time-format)%^{Title} %^g\n%t\n%?")
+(defvar owl/org-basic-daybook-template
+      "* TODO [#B] %(format-time-string org-journal-time-format)%^{Task} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
+      "Template for basic daybook task entry.")
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+  ("d"
+     "daybook entry"
+     entry
+     (function owl/org-journal-find-location),
+     owl/org-basic-daybook-template     ; template
+     :empty-lines 1)
 #+END_EXAMPLE
 
 *** COMMENT
