@@ -1241,7 +1241,7 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun ap/org-call-src-block (name)
+(defun owl/org-call-src-block (name)
   ;; Based on <http://kitchingroup.cheme.cmu.edu/blog/2014/08/11/Using-org-mode-outside-of-Emacs-sort-of/>
   ;; This works better than the org-sbe (aka sbe) macro, because it
   ;; calls the block upon expansion, making it difficult to bind to
