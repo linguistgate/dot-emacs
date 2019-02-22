@@ -1241,22 +1241,22 @@ So the =tasks.org= remains important. It has the flavor of my old =organizer.org
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun owl/org-call-src-block (name)
-  ;; Based on <http://kitchingroup.cheme.cmu.edu/blog/2014/08/11/Using-org-mode-outside-of-Emacs-sort-of/>
-  ;; This works better than the org-sbe (aka sbe) macro, because it
-  ;; calls the block upon expansion, making it difficult to bind to
-  ;; a command to run later
-  ;; TODO: Use `org-babel-goto-named-src-block'!  I guess it's new...or not, it's from 2010!
-  (org-with-wide-buffer
-   (-when-let (src (org-element-map (org-element-parse-buffer) 'src-block
-                     (lambda (element)
-                       (when (string= name (org-element-property :name element))
-                         element))
-                     nil ;info
-                     t ))
-     (goto-char (org-element-property :begin src))
-     (let ((org-confirm-babel-evaluate nil))
-       (org-babel-execute-src-block)))))
+  (defun owl/org-call-src-block (name)
+    ;; Based on <http://kitchingroup.cheme.cmu.edu/blog/2014/08/11/Using-org-mode-outside-of-Emacs-sort-of/>
+    ;; This works better than the org-sbe (aka sbe) macro, because it
+    ;; calls the block upon expansion, making it difficult to bind to
+    ;; a command to run later
+    ;; TODO: Use `org-babel-goto-named-src-block'!  I guess it's new...or not, it's from 2010!
+    (org-with-wide-buffer
+     (-when-let (src (org-element-map (org-element-parse-buffer) 'src-block
+                       (lambda (element)
+                         (when (string= name (org-element-property :name element))
+                           element))
+                       nil ;info
+                       t ))
+       (goto-char (org-element-property :begin src))
+       (let ((org-confirm-babel-evaluate nil))
+         (org-babel-execute-src-block)))))
 #+END_SRC
 
 *** Setting some Refile behaviors
@@ -1404,10 +1404,10 @@ I’ve had problems in the past rolling this out (see Comment below), but I am t
     :after org
     :defer t
     :custom
-    (org-journal-dir "~/org/daybook")                                             ; location
-    (org-journal-file-format "%Y-%m-%d.org")                                      ; file name format
-    (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"NEXT\"")  ; carryover items
-    (org-journal-enable-agenda-integration t)                                     ; ensure entries are on the agenda
+    (org-journal-dir "~/org/daybook")                                                              ; location
+    (org-journal-file-format "%Y-%m-%d.org")                                                       ; file name format
+    (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"NEXT\"|TODO=\"WAITING\"")  ; carryover items
+    (org-journal-enable-agenda-integration t)                                                      ; ensure entries are on the agenda
     )
   (org-journal-update-auto-mode-alist)
 
