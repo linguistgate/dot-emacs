@@ -1393,7 +1393,7 @@ The following helper function interactively adds custom IDs to all headlines in 
 
 ** Org Journal as Task Daybook (=org-journal=)
 
-The directory =~/org/tasks= holds a set of short diary files that together comprise a bullet-journal-esque daybook.
+The directory =~/org/daybook= holds a set of short diary files that together comprise a bullet-journal-esque daybook.
 
 I’ve had problems in the past rolling this out (see Comment below), but I am trying it again as I despise the =tasks.org= file that is once again becoming a catch-all when I don’t know where to put a task in an “Area.”
 
@@ -1402,9 +1402,12 @@ I’ve had problems in the past rolling this out (see Comment below), but I am t
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
     :after org
+    :defer t
     :custom
-    (org-journal-dir "~/org/daybook")      ; location
-    (org-journal-enable-agenda-integration t)  ; ensure entries are on the agenda
+    (org-journal-dir "~/org/daybook")                                             ; location
+    (org-journal-file-format "%Y-%m-%d.org")                                      ; file name format
+    (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"NEXT\"")  ; carryover items
+    (org-journal-enable-agenda-integration t)                                     ; ensure entries are on the agenda
     )
   (org-journal-update-auto-mode-alist)
 
