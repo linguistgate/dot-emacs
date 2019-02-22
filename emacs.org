@@ -948,12 +948,7 @@ But ... what prevented me from taking this route of using recursion was that som
                                 "~/org/areas/"
                                 "~/org/cpb/"
                                 "~/org/daybook"
-                                "~/.emacs.d/")))
-                      )
-    )
-
-
-
+                                "~/.emacs.d/")))))
 #+END_SRC
 
 In case I need to return to the good ol’ days of listing all of the relevant directories, here they are:
