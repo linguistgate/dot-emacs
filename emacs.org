@@ -98,38 +98,38 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#ivy][Ivy]]
     - [[#counsel][Counsel]]
     - [[#swiper][Swiper]]
+  - [[#navigation][Navigation]]
+    - [[#uniquify][Uniquify]]
+    - [[#dired][Dired]]
+    - [[#deft][Deft]]
   - [[#project-management][Project Management]]
     - [[#version-control][Version Control]]
       - [[#backups][Backups]]
       - [[#magit][Magit]]
-  - [[#deft][Deft]]
-  - [[#navigation][Navigation]]
-    - [[#uniquify][Uniquify]]
-    - [[#dired][Dired]]
   - [[#org-mode-initialization-and-defaults][Org-Mode Initialization and Defaults]]
     - [[#org-defaults][Org Defaults]]
     - [[#org-modules][Org Modules]]
+    - [[#org-bullets][Org Bullets]]
+    - [[#org-custom-ids-org-id][Org Custom IDs (=org-id=)]]
   - [[#org-agenda][Org Agenda]]
     - [[#the-super-agenda][The Super Agenda]]
     - [[#the-set-of-todo-started-done-keywords][The Set of ~TODO-STARTED-DONE~ Keywords]]
       - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
     - [[#gtd-contexts][GTD Contexts]]
-  - [[#org-bullets][Org Bullets]]
   - [[#org-capture-and-refile][Org Capture and Refile]]
     - [[#apologia][Apologia]]
     - [[#capture-code-org-capture][Capture Code (=org-capture=)]]
     - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
     - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
     - [[#clock][Clock]]
+  - [[#org-journal-as-task-daybook-org-journal][Org Journal as Task Daybook (=org-journal=)]]
+    - [[#comment][COMMENT]]
+  - [[#habits-org-habit][Habits (=org-habit=)]]
   - [[#contacts-org-contacts][Contacts (=org-contacts=)]]
     - [[#rant][Rant]]
     - [[#setup][Setup]]
   - [[#encryption][Encryption]]
-  - [[#org-custom-ids-org-id][Org Custom IDs (=org-id=)]]
-  - [[#org-journal-as-task-daybook-org-journal][Org Journal as Task Daybook (=org-journal=)]]
-    - [[#comment][COMMENT]]
-  - [[#org-with-progrmaming-languages-org-babel][Org With Progrmaming Languages (=org-babel=)]]
-  - [[#habits-org-habit][Habits (=org-habit=)]]
+  - [[#progrmaming-languages-org-babel][Progrmaming Languages (=org-babel=)]]
   - [[#reference-and-resource-management-org-ref-and-others][Reference and Resource Management (=org-ref= and others)]]
     - [[#org-ref][Org-Ref]]
     - [[#annotation][Annotation]]
@@ -137,7 +137,6 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#blogging-completely-within-org][Blogging Completely Within Org]]
     - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
     - [[#list-of-publishing-projects][List of Publishing Projects]]
-  - [[#toc-org][Toc-org]]
   - [[#attachments][Attachments]]
     - [[#attachments-1][Attachments]]
     - [[#web-archiving][Web Archiving]]
@@ -157,6 +156,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#editing][Editing]]
     - [[#distraction-free-writing][Distraction-Free Writing]]
   - [[#dashboard][Dashboard]]
+  - [[#toc-org][Toc-org]]
   - [[#post-initialization][Post Initialization]]
 
 ** About This File
@@ -334,7 +334,6 @@ Since the code is automatically compiled during runtime, if the configuration ha
 #+END_SRC
 
 ***** COMMENT For some reason, =require '(bind-key)= needs to be overtly stated (and seemingly outside of =eval-when-compile= for =:bind= personal keybindings to work with byte compilation (MEA - [2018-11-03 Sat])
-
 
 ** Global Defaults
 *** Core Editing
@@ -745,7 +744,32 @@ Swiper is a searching utility with quick preview in minibuffer. I load it when =
   (use-package swiper
     :commands (swiper swiper-all))
 #+END_SRC
+** Navigation
+*** Uniquify
+*** Dired
+# (use-package dired-hacks-utils)
+# (use-package dired-filter)
+# (use-package dired-rainbow)
+# (use-package dired-narrow)
+# (use-package dired-collapse)
+*** Deft
+Deft is an Emacs mode for quickly browsing, filtering, and editing directories of plain text notes. It's inspired by Notational Velocity and developed by Jason Blevins. I'm interested in using it as part of my burgeoning knowledge management system and as a way to maintain disparate Org files that can nevertheless be accessed for retrieval and use.
 
+I install Deft via the =use-package= macro and keep its configuration relatively simple:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :bind ("<f8>" . deft)
+    :commands (deft)
+    :config (setq deft-directory "~/org"
+                  deft-extensions '("md" "org" "tex")
+                  deft-recursive t)
+    )
+#+END_SRC
+
+The main notetaking directory, a sort of Wiki and Commonplace Book repository, is =~/org/notebook=. Most of the files here will be Org files, though that's not a given.
+
+I bind Deft to =<f8>=.
 ** Project Management
 
 Projectile is a quick and easy project management package that "just works". We're
@@ -790,36 +814,6 @@ Free and open source distributed version control system designed to handle every
            ("C-c f" . magit-grep)))
 
 #+END_SRC
-
-** Deft
-
-Deft is an Emacs mode for quickly browsing, filtering, and editing directories of plain text notes. It's inspired by Notational Velocity and developed by Jason Blevins. I'm interested in using it as part of my burgeoning knowledge management system and as a way to maintain disparate Org files that can nevertheless be accessed for retrieval and use.
-
-I install Deft via the =use-package= macro and keep its configuration relatively simple:
-
-#+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :bind ("<f8>" . deft)
-    :commands (deft)
-    :config (setq deft-directory "~/org"
-                  deft-extensions '("md" "org" "tex")
-                  deft-recursive t)
-    )
-#+END_SRC
-
-The main notetaking directory, a sort of Wiki and Commonplace Book repository, is =~/org/notebook=. Most of the files here will be Org files, though that's not a given.
-
-I bind Deft to =<f8>=.
-
-** Navigation
-*** Uniquify
-*** Dired
-# (use-package dired-hacks-utils)
-# (use-package dired-filter)
-# (use-package dired-rainbow)
-# (use-package dired-narrow)
-# (use-package dired-collapse)
-
 ** Org-Mode Initialization and Defaults
 
 Include the newer version of org-mode, favoring over the built-in one. Manually remove the org directories from the load path, to ensure the version we want is prioritized instead.
@@ -900,6 +894,68 @@ Org-modules' individual behavior is established under their own headings below (
 - =org-gnus=
 - =org-irc=
 - =org-w3m=
+
+*** Org Bullets
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
+#+END_SRC
+*** Org Custom IDs (=org-id=)
+
+Custom IDs allow internal linking within a document to work well.
+
+Another reason to use custom IDs becomes evident in export environments and many other situations. It’s helpful to tag headings in Org with custom IDs. They are most inconspicuous as they sit in drawers; however, they can get a little ugly, I guess.
+
+I’ve already loaded =org-id= as a module. Next, I make sure it applies for links (external and internal) as well:
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+#+END_SRC
+
+Lee Hinman, in his blog post “[[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Emacs Org-mode: Use good header IDs!]],” states that in exporting Org files, links are improperly anchored if text is modified post-export. HTML anchors can end up pointing to the wrong headlines.
+
+With custom IDs, the value of =CUSTOM_ID=, which is set on a per-heading basis in Org within a properties drawer, will be consistent even when headings are inserted in between other headings.
+
+The nicest feature of =org-id= is that these IDs need not be gobbledygook but can be human-friendly names.
+
+*************** TODO Figure out how to create simpler CUSTOM_IDs :@digital:
+                        UUIDs are ugly and unwieldy.
+*************** END
+
+Hinman provides a private function that defines a personal version of =org-custom-id-get= and creates a new property if one doesn’t already exist.
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/org-custom-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+     If POM is nil, refer to the entry at point. If the entry does
+     not have an CUSTOM_ID, the function returns nil. However, when
+     CREATE is non nil, create a CUSTOM_ID if none is present
+     already. PREFIX will be passed through to `org-id-new'. In any
+     case, the CUSTOM_ID of the entry is returned."
+    (interactive)
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          id)))))
+#+END_SRC
+
+The following helper function interactively adds custom IDs to all headlines in a buffer if the headlines don’t already have one:
+
+#+BEGIN_SRC emacs-lisp
+  (defun owl/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the
+     current file which do not already have one."
+    (interactive)
+    (org-map-entries (lambda () (owl/org-custom-id-get (point) 'create))))
+#+END_SRC
 
 ** Org Agenda
 
@@ -1089,15 +1145,6 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
                         ("@writing" . ?w)
                         ("@self" . ?s)))
 #+END_SRC
-
-** Org Bullets
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode)
-    :custom (org-bullets-bullet-list '("●" "▲" "■" "✶" "◉" "○" "○")))
-#+END_SRC
-
 ** Org Capture and Refile
 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
@@ -1300,94 +1347,6 @@ Currently, I bind it to =C-c g= and focus only on the =captures.org= file and se
 #+END_SRC
 
 *** Clock
-
-** Contacts (=org-contacts=)
-
-*** Rant
-
-I’ve used BBDB in the past, and I like it. But =org-contacts= makes a lot of sense to me.
-
-What is of paramount importance to me is to have a local, plain-text file of my contacts (addresses, past addresses, anniversaries) that is divorced from the Google and Facebook ecosystem. Full stop.
-
-(Again, this isn’t to say I won’t use Google Contacts, especially in work contexts, or other contact software that interfaces seamlessly with smartphones. But that’s not the point. The point is that I should have primary ownership of my contact information, and plain text just makes sense.)
-
-*** Setup
-
-But this all seems a little underpowered, and I have a huge bbdb database that I’d like to use (with former addresses, etc.).
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-contacts
-    :ensure nil
-    :after org
-    :preface
-    (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-  :PROPERTIES:
-  :ADDRESS: %^{1234 Stallman Dr., Phantisocracy, MA 12345, USA}
-  :BIRTHDAY: %^{yyyy-mm-dd}
-  :EMAIL: %(org-contacts-template-email)
-  :NOTE: %^{NOTE}
-  :END:" "Template for org-contacts.")
-    :custom (org-contacts-files '("~/org/resources/contacts/contacts.org")))
-#+END_SRC
-
-**** COMMENT Requires more thought -- bbdb vs org-contacts
-
-** Encryption
-** Org Custom IDs (=org-id=)
-
-Custom IDs allow internal linking within a document to work well.
-
-Another reason to use custom IDs becomes evident in export environments and many other situations. It’s helpful to tag headings in Org with custom IDs. They are most inconspicuous as they sit in drawers; however, they can get a little ugly, I guess.
-
-I’ve already loaded =org-id= as a module. Next, I make sure it applies for links (external and internal) as well:
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-#+END_SRC
-
-Lee Hinman, in his blog post “[[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Emacs Org-mode: Use good header IDs!]],” states that in exporting Org files, links are improperly anchored if text is modified post-export. HTML anchors can end up pointing to the wrong headlines.
-
-With custom IDs, the value of =CUSTOM_ID=, which is set on a per-heading basis in Org within a properties drawer, will be consistent even when headings are inserted in between other headings.
-
-The nicest feature of =org-id= is that these IDs need not be gobbledygook but can be human-friendly names.
-
-*************** TODO Figure out how to create simpler CUSTOM_IDs :@digital:
-                        UUIDs are ugly and unwieldy.
-*************** END
-
-Hinman provides a private function that defines a personal version of =org-custom-id-get= and creates a new property if one doesn’t already exist.
-
-#+BEGIN_SRC emacs-lisp
-  (defun owl/org-custom-id-get (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
-     If POM is nil, refer to the entry at point. If the entry does
-     not have an CUSTOM_ID, the function returns nil. However, when
-     CREATE is non nil, create a CUSTOM_ID if none is present
-     already. PREFIX will be passed through to `org-id-new'. In any
-     case, the CUSTOM_ID of the entry is returned."
-    (interactive)
-    (org-with-point-at pom
-      (let ((id (org-entry-get nil "CUSTOM_ID")))
-        (cond
-         ((and id (stringp id) (string-match "\\S-" id))
-          id)
-         (create
-          (setq id (org-id-new (concat prefix "h")))
-          (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
-          id)))))
-#+END_SRC
-
-The following helper function interactively adds custom IDs to all headlines in a buffer if the headlines don’t already have one:
-
-#+BEGIN_SRC emacs-lisp
-  (defun owl/org-add-ids-to-headlines-in-file ()
-    "Add CUSTOM_ID properties to all headlines in the
-     current file which do not already have one."
-    (interactive)
-    (org-map-entries (lambda () (owl/org-custom-id-get (point) 'create))))
-#+END_SRC
-
 ** Org Journal as Task Daybook (=org-journal=)
 
 The directory =~/org/daybook= holds a set of short diary files that together comprise a bullet-journal-esque daybook.
@@ -1463,24 +1422,6 @@ Tasks in this set of files should be tasks that can be marked with a GTD tag (e.
 3. It has lots of bugs or behaviors that seem unexpected, given default settings.
 
 I will be monitoring the new system to see if these problems persist ([2019-02-20 Wed]).
-
-** Org With Progrmaming Languages (=org-babel=)
-
-I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
-
-#+BEGIN_SRC emacs-lisp
-  (use-package gnuplot)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((C . t)
-                               (shell . t)
-                               (makefile . t)
-                               (python . t)
-                               (gnuplot . t)))
-#+END_SRC
-
 ** Habits (=org-habit=)
 
 Habit tracking via =org-habit= will show a graph in the agenda tracking progress and consistency for established habits. I think it's a good idea to keep the set of habits small and specific.
@@ -1500,6 +1441,53 @@ I like my habit graph to show throughout the day even if I’ve already complete
   (setq org-habit-show-all-today t)
 #+END_SRC
 
+** Contacts (=org-contacts=)
+
+*** Rant
+
+I’ve used BBDB in the past, and I like it. But =org-contacts= makes a lot of sense to me.
+
+What is of paramount importance to me is to have a local, plain-text file of my contacts (addresses, past addresses, anniversaries) that is divorced from the Google and Facebook ecosystem. Full stop.
+
+(Again, this isn’t to say I won’t use Google Contacts, especially in work contexts, or other contact software that interfaces seamlessly with smartphones. But that’s not the point. The point is that I should have primary ownership of my contact information, and plain text just makes sense.)
+
+*** Setup
+
+But this all seems a little underpowered, and I have a huge bbdb database that I’d like to use (with former addresses, etc.).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-contacts
+    :ensure nil
+    :after org
+    :preface
+    (defvar owl/org-contacts-template "* %(org-contacts-template-name)
+  :PROPERTIES:
+  :ADDRESS: %^{1234 Stallman Dr., Phantisocracy, MA 12345, USA}
+  :BIRTHDAY: %^{yyyy-mm-dd}
+  :EMAIL: %(org-contacts-template-email)
+  :NOTE: %^{NOTE}
+  :END:" "Template for org-contacts.")
+    :custom (org-contacts-files '("~/org/resources/contacts/contacts.org")))
+#+END_SRC
+
+**** COMMENT Requires more thought -- bbdb vs org-contacts
+** Encryption
+** Progrmaming Languages (=org-babel=)
+
+I use =org-babel= to embed and process some code in my Org files. Here I initialize the set of languages I commonly and less-than-commonly rely on:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnuplot)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((C . t)
+                               (shell . t)
+                               (makefile . t)
+                               (python . t)
+                               (gnuplot . t)))
+#+END_SRC
 
 ** Reference and Resource Management (=org-ref= and others)
 
@@ -1629,17 +1617,6 @@ Here I establish the set of publishing projects detailed above. Note that some o
            :publishing-directory "/tmp/www-out"
            :publishing-function org-publish-attachment)))
 #+END_SRC
-
-** Toc-org
- Let's install and load the =toc-org= package after org mode is loaded. This is the
- package that automatically generates an up to date table of contents for us.
-
- #+BEGIN_SRC emacs-lisp
-   (use-package toc-org
-     :after org
-     :init (add-hook 'org-mode-hook #'toc-org-enable))
- #+END_SRC
-
 ** Attachments
 
 *** Attachments
@@ -1711,9 +1688,6 @@ I don’t like that when it creates a secondary directory (via =org-download--di
     ; Adds dired drag-and-drop support via hook
     (add-hook 'dired-mode-hook 'org-download-enable))
 #+END_SRC
-
-
-
 ** Writing Environment
 :PROPERTIES:
 :CUSTOM_ID: writing-environment
@@ -1984,7 +1958,6 @@ Here's a function that toggles it using =cond=, just for fun:
            (toggle-frame-fullscreen)
            (menu-bar-mode -1))))
 #+END_SRC
-
 ** Dashboard
 
 This is an extensible Emacs startup screen that I've started to experiment with as a slow replacement for =organizer.org=.
@@ -2012,6 +1985,16 @@ Dashboard requires =page-break-lines= and =projectile=.
     )
 
 #+END_SRC
+
+** Toc-org
+ Let's install and load the =toc-org= package after org mode is loaded. This is the
+ package that automatically generates an up to date table of contents for us.
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package toc-org
+     :after org
+     :init (add-hook 'org-mode-hook #'toc-org-enable))
+ #+END_SRC
 
 ** Post Initialization
 
