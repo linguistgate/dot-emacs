@@ -1366,6 +1366,16 @@ I’ve had problems in the past rolling this out (see Comment below), but I am t
 
 (In general I feel that running notebooks and daybooks are preferable to vastly dispersed Area files. Area files should largely be command structures for spheres of ongoing activity, including the most common files that undergird these activities. In any case, an “Area” is an abstract concept and can be instantiated via a GTD tag.)
 
+[2019-03-03 Sun]
+In general, I feel like I need a better understanding of how my own needs fit in with, and deviate from, P.A.R.A.:
+
+   - In the interest of cloud-based backup solutions, there’s a problem with situating Project folders within Areas because of the possibly large disk memory size and the need to use various =.ignore= files to ease the burden on syncing.
+   - I don’t like the term “Areas,” but it’s better than “Admin.” It’s probably better than “Sphere.”
+   - As with all modern organization systems, there’s an inherent tension between tagging/flatness and directories/recursion. I personally dislike directories full of huge files that have a tagging system invisible to me without the aid of, say, an Org file. But at the same time, deep recursion is silly.
+   - I really like the idea of =Areas= as zones where I track expenses, fitness, home inventories, digital setups, an the like.
+   - I really like the idea of a =Commonplace Book= that mimics my Coleridgean needs in digital space. I don’t yet know how to deploy it sensibly, i.e., using a web server, publishing functions that create a static website, or other means.
+   - I need to have a central hub that houses my =Antilibrary=. The antilibrary was once =media=. It’s now =resources=. But I think the true point is to house my own personal collection of documents, perhaps using a UUID system or similar. I have to be careful because the Antilibrary is not a library; it /should not/ be aimless hoarding; and it should be relatively navigable. I cannot store all the materials of the Antilibrary on my working laptop, so I need to find a centralized solution of a web server that I own. Various components of the Antilibrary should be “frozen,” encrypted, and uploaded to /relatively/ trustworthy offsite data storage facilities.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
     :defer t
