@@ -1619,6 +1619,9 @@ I use =org-babel= to embed and process some code in my Org files. Here I initial
 
 #+BEGIN_SRC emacs-lisp
   (use-package gnuplot)
+  (use-package php-mode)
+  (use-package ob-php
+    :load-path "user/packages/ob-php/")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1626,6 +1629,7 @@ I use =org-babel= to embed and process some code in my Org files. Here I initial
    'org-babel-load-languages '((C . t)
                                (shell . t)
                                (makefile . t)
+                               (php . t)
                                (python . t)
                                (gnuplot . t)))
 #+END_SRC
