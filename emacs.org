@@ -94,6 +94,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#hinting][Hinting]]
     - [[#hydra][Hydra]]
     - [[#ace-window][Ace Window]]
+    - [[#zoom-window][Zoom Window]]
     - [[#autocompletion][Autocompletion]]
     - [[#ivy][Ivy]]
     - [[#counsel][Counsel]]
@@ -687,6 +688,13 @@ Manipulate window size with a hydra.
   (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
 #+END_SRC
 
+*** Zoom Window
+
+#+BEGIN_SRC emacs-lisp
+  (use-package zoom-window
+    :bind ("C-x C-z" . zoom-window-zoom))
+#+END_SRC
+
 *** Autocompletion
 
 Package =auto-complete= works very well for some IDE-like behaviors.
@@ -1035,15 +1043,129 @@ SCHEDULED: <2019-01-12 Sat>
 I am currently using the package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] to provide nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
 
 #+BEGIN_SRC emacs-lisp
+  (setq
+   org-agenda-custom-commands
+   ;; Setting here instead of in custom-set-variables so I can preserve the comments
+   (list
+    (quote
+     ("A" "Today"
+      ;; Copied from and inspired by https://github.com/fniessen/emacs-leuven/blob/master/org-custom-agenda-views.el
+      (
+       ;; Agenda
+       (agenda ""
+               ((org-agenda-entry-types '(:timestamp :sexp  :deadline* :scheduled*))
+                (org-deadline-warning-days 0)
+                (org-agenda-span 'day)))
+       ;; DEADLINE today
+       (agenda ""
+               ((org-agenda-entry-types '(:deadline))
+                (org-agenda-overriding-header "Deadline")
+                (org-agenda-sorting-strategy '(priority-down time-down))
+                (org-agenda-span 'day)
+                (org-agenda-start-on-weekday nil)
+                (org-deadline-warning-days 0)
+                (org-agenda-time-grid nil)))
+       ;; TODAY todo items
+       (todo "TODAY")
+       ;; SCHEDULED for today
+       (agenda ""
+               ((org-agenda-entry-types '(:scheduled))
+                (org-agenda-overriding-header "Scheduled")
+                (org-agenda-sorting-strategy '(priority-down time-down))
+                (org-agenda-span 'day)
+                (org-agenda-start-on-weekday nil)
+                (org-deadline-warning-days 0)
+                (org-agenda-time-grid nil)
+                (org-agenda-skip-function (ap/org-agenda-skip-habits t))))
+       ;; Habits
+       (agenda ""
+               ((org-agenda-entry-types '(:scheduled))
+                (org-agenda-overriding-header "Habits")
+                (org-agenda-sorting-strategy '(priority-down time-down))
+                (org-agenda-span 'day)
+                (org-agenda-start-on-weekday nil)
+                (org-deadline-warning-days 0)
+                (org-agenda-time-grid nil)
+                (org-agenda-skip-function (ap/org-agenda-skip-habits nil))))
+       ;; Prayers
+       (tags-todo "prayers"
+                  ((org-agenda-overriding-header "Prayers"))
+                  (expand-file-name "prayers.org" org-directory)))))
+    (quote ("u" "SUPER Agenda"
+            org-agenda-list ""
+            ((org-agenda-span 'day)
+             (org-super-agenda-groups
+              '((:name "Top"
+                       :todo "TODAY"
+                       :and (:priority "A" :not (:habit t)))
+                (:name "Daybook" :tag "@daybook")
+                (:habit t)
+                (:todo "NEXT")
+                (:name "Prayers" :tag "prayers")
+                (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
+                       :order 9)
+                (:name "Friends/Family" :tag ("friends" "family"))
+                (:name "Computer"
+                       :tag ("computer" "emacs" "org"))
+                (:todo "WAITING" :order 8)
+                )))))
+    (quote
+     ("p" "By-Priority"
+      ;; Copied from and inspired by https://github.com/fniessen/emacs-leuven/blob/master/org-custom-agenda-views.el
+      (
+       ;; Agenda
+       (agenda ""
+               ((org-agenda-entry-types '(:timestamp :sexp))
+
+                (org-agenda-span 'day)))
+       ;; Priority A items
+       (tags-todo "+PRIORITY={A}"
+                  ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-overriding-header "Priority A")
+                   (org-agenda-sorting-strategy '(deadline-up)))
+                  ;; ;;(org-agenda-span 'day)
+                  ;; (org-agenda-start-on-weekday nil)
+                  ;; (org-deadline-warning-days 0)
+                  ;; (org-agenda-time-grid nil)
+                  )
+
+
+       ;; Prayers
+       (tags-todo "prayers"
+                  ((org-agenda-overriding-header "Prayers"))
+                  (expand-file-name "prayers.org" org-directory)))))
+    (quote
+     ("h" "Hotlist"
+      ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+      ((tags-todo "DEADLINE<\"<+0d>\""
+                  ((org-agenda-overriding-header "OVERDUE")))
+       (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                  ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
+       (tags-todo "DEADLINE=\"\"+PRIORITY={A}|DEADLINE>\"<+1w>\"+PRIORITY={A}"
+                  ((org-agenda-overriding-header "HIGH PRIORITY")))
+       (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                  ((org-agenda-overriding-header "FLAGGED")
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-when-regexp-matches))
+                   (org-agenda-skip-regexp "\\[#A\\]")))
+       ;; (tags-todo "DEADLINE=\"\"+PRIORITY<>{A}+FLAGGED|DEADLINE>\"<+1w>\"+PRIORITY<>{A}+FLAGGED"
+       ;;            ((org-agenda-overriding-header "...FLAGGED...")))
+       )
+      ((org-agenda-todo-ignore-scheduled 'future)
+       (org-agenda-sorting-strategy '(deadline-up)))))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package org-super-agenda
     :init (org-super-agenda-mode)
     :config (setq org-super-agenda-groups
-                  '((:name "Today"
+                  '((:log t)
+                    (:name "Today"
                            :scheduled today)
                     (:name "Important"
                            :priority "A")
-                    (:name "Schedule"
-                           :time-grid t)
+                    (:name "Daybook"
+                           :tag "@daybook")
                     (:habit t)
                     (:name "Due today"
                            :deadline today)
@@ -1053,8 +1175,7 @@ I am currently using the package [[https://github.com/alphapapa/org-super-agenda
                            :deadline future)
                     (:name "Books to read"
                            :and (:todo "TOREAD" :tag "@reading"))
-                    (:discard (:anything t))))
-    )
+                    (:discard (:anything t)))))
 #+END_SRC
 
 *** The Set of ~TODO-STARTED-DONE~ Keywords
@@ -1107,7 +1228,7 @@ allows changing todo states with S-left and S-right skipping all of the normal p
 
 I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-agenda-custom-commands
         '(("g" . "GTD contexts")
           ("gc" "Career" tags-todo "@career")
