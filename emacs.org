@@ -138,6 +138,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#blogging-completely-within-org][Blogging Completely Within Org]]
     - [[#publishing-notebooks-to-a-private-website][Publishing Notebooks to a Private Website]]
     - [[#list-of-publishing-projects][List of Publishing Projects]]
+  - [[#emacs-as-web-server][Emacs as Web Server]]
   - [[#attachments][Attachments]]
     - [[#attachments-1][Attachments]]
     - [[#web-archiving][Web Archiving]]
@@ -1632,7 +1633,6 @@ I use =org-babel= to embed and process some code in my Org files. Here I initial
                                (php . t)
                                (python . t)
                                (sql . t)
-                               (mysql . t)
                                (gnuplot . t)))
 #+END_SRC
 
@@ -1764,6 +1764,18 @@ Here I establish the set of publishing projects detailed above. Note that some o
            :publishing-directory "/tmp/www-out"
            :publishing-function org-publish-attachment)))
 #+END_SRC
+** Emacs as Web Server
+
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd
+    :custom http-root "/var/www"
+    (httpd-start))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package impatient-mode)
+#+END_SRC
+
 ** Attachments
 
 *** Attachments
@@ -2132,7 +2144,6 @@ Dashboard requires =page-break-lines= and =projectile=.
     )
 
 #+END_SRC
-
 ** Toc-org
  Let's install and load the =toc-org= package after org mode is loaded. This is the
  package that automatically generates an up to date table of contents for us.
