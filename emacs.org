@@ -788,7 +788,7 @@ going to install it and make sure it's loaded immediately.
   (use-package projectile
     :demand t
     :config
-    (setq projectile-project-search-path '("~/org/areas/"))
+    (setq projectile-project-search-path '("~/projects/"))
     (setq projectile-require-project-root nil)
     )
 #+END_SRC
