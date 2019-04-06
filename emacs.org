@@ -121,7 +121,6 @@ Literate programming is human-centric in the sense that programming code is "tan
       - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
     - [[#gtd-contexts][GTD Contexts]]
   - [[#org-capture-and-refile][Org Capture and Refile]]
-    - [[#apologia][Apologia]]
     - [[#capture-code-org-capture][Capture Code (=org-capture=)]]
     - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
     - [[#refile-targets-integration-with-para][Refile targets: Integration with P.A.R.A.]]
@@ -1281,16 +1280,6 @@ I use some of the insights of the GTD system as well Tiago Forte's PARA system. 
 ** Org Capture and Refile
 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
-
-*** Apologia
-
-I provide two templates for captures, =owl/org-basic-task-template= and =owl/org-contacts/template=.
-
-The =task= capture template is then set up to insert a new task into a simple top-level file, =tasks.org=. Within my conception of the PARA system, this extends and refines the notion of “Area” beyond a simplistic “Area=File” model. An Area is an abstract notion reflecting a domain of my life with recurring tasks, logs, habits, resources, and /one-off tasks/.
-
-I find it irksome to have to file a task into a specific file when I just want to create it. The beauty of PARA, in this regard, is that the tag I associate with the task renders it part of its Area, even if it’s not located in the Area file associated with it. For example, if I have a one-off task, “Write thank-yous,” I /can/ consider this a project, but it’s probably not necessary to break down the sub-steps in most cases. I /can/ attempt to file it within =~/areas/home.org=, but this makes little sense because it will simply clutter up a file that is about showing recurring energy and effort, not individual tasks that get completed here and there. 
-
-So the =tasks.org= remains important. It has the flavor of my old =organizer.org= file, but it is intended to be just as wild and unstructured as =captures.org=. For instance, it is not a file to develop projects in. If I am starting to add subtasks, I should pause and say, “This is a mini-project; this is not the point of =tasks.org=.” The ideal =tasks.org= file is one with very few open tasks and lots of archived ones.
 
 *** Capture Code (=org-capture=)
 
