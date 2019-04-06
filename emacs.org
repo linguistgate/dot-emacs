@@ -113,6 +113,9 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#org-bullets][Org Bullets]]
     - [[#org-custom-ids-org-id][Org Custom IDs (=org-id=)]]
   - [[#org-agenda][Org Agenda]]
+    - [[#structure][Structure]]
+    - [[#explanation-of-captures-cpb-daybook-hub][Explanation of Captures, CPB, Daybook, Hub]]
+    - [[#package-setup][Package Setup]]
     - [[#the-super-agenda][The Super Agenda]]
     - [[#the-set-of-todo-started-done-keywords][The Set of ~TODO-STARTED-DONE~ Keywords]]
       - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
@@ -972,30 +975,61 @@ My intent is for the agenda to be the central *digital* hub of my activities at 
 
 I bind =C-c a= to =org-agenda=.
 
-Currently, I build my agenda from top-level =.org= files in the =~/org/areas= directory. Recursive search solutions do not seem to be working; in addition, my preferred directory structure for =~/areas= is as follows.
+*** Structure
 
-These are "publishable" documents that can be configured as a hierarchy of webpages, or they can be assembled into a wiki system.
-
-Under the PARA rubric, areas are "[[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][ongoing spheres of activity]]." They are /not/ projects, but projects often emerge from these areas. They are also /not/ resources, which are supposed to be "materials not tied to a specific project or area."
-
-A =TODO= item in an Areas file can imply either a repeating task, a onetime task, or a meaningful project (a task with a set of subtasks). Projects of substantial size should always be created under =~/org/areas/=. I let Projectile and =org-projectile= handle project management.
+Currently I am trying the following structure for my Org-based workflow:
 
 #+BEGIN_EXAMPLE
-  area1/
-    area1.org
-    data/
-    static/
-    etc/
-    css/
-    /projects
-  area2/
-    area2.org
-    ...
+├── captures
+│   ├── captures.org
+│   └── unfiled
+├── cpb
+│   ├── digital.nb.org
+│   ├── journal.org
+│   ├── math.nb.org
+│   └── reference.org
+├── daybook
+│   ├── 20190203
+│   └── 20190204
+└── hub
+    ├── calendar.org
+    ├── contacts.bbdb
+    ├── meta.org
+    └── systems.org
 #+END_EXAMPLE
 
-The function that establishes agenda files is recursive and could eventually be unwieldy as the number of Org files grows, and the depth and breadth of directories increases. At present, with a precompiled =init= file, I’m seeing about 2 sec to /load all of Emacs/. So not really a worry right now.
+This structure represents about a year of thinking through task, workflow, and knowledge management systems. I don’t think it’s my final word, but it does reflect best where I want to lay my energies. In large measure it incorporates aspects of bullet journaling (via daybook), 
 
-But ... what prevented me from taking this route of using recursion was that some of my files have local variables in them. *I’ve therefore found it necessary to set =enable-local-variables= to nil* and simply run them on an as-needed basis. The reason is that when I run =emacs --daemon=, I get requests to run the variables. However, entering any value (=y=, =n=, =!=, etc.) simply causes the daemon process to hang.
+*** Explanation of Captures, CPB, Daybook, Hub
+
+The =captures= and =cpb= directories encapsulate [[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][progressive summarization]], at least the first four layers:
+
+- Layer 1 :: When you encounter something interesting, capture it
+- Layer 2 :: Bold the most interesting parts
+- Layer 3 :: Highlight the most interesting bolded sections
+- Layer 4 :: Summarize the bolded portions and the note in your own words
+- Layer 5 :: Turn your notes into something new: a tweet, a blog post, even a book
+
+The Commonplace Book directory, or =cpb= direcotry, includes my journals and notebooks, all of which aim to have a Coleridgean flair. Captures pulls from the Web (using Firefox’s =org-capture= extension, primarily). Items not captured via this method can be entered manually with a capture template, or in certain cases can be put into =unfiled= for later assimilation.
+
+The =daybook= allows for bullet-journal carryover of tasks and includes short notes about what I accomplished each day. The Agenda pulls heavily from the daybook. It is intended to be a serious commitment and is separate from, but can often influence or engage with, projects and notes.
+
+The =hub= replaces several attempts at realzing “Areas” wtihin Tiago Forte’s P.A.R.A. framework. I’ve gone through highly articulated structures that list out all ongoing spheres of activity. Under the PARA rubric, areas are "[[https://medium.com/@tasshin/implementing-a-second-brain-in-emacs-and-org-mode-ef0e44fb7ca5][ongoing spheres of activity]]." They are /not/ projects, but projects often emerge from these areas. They are also /not/ resources, which are supposed to be "materials not tied to a specific project or area." My solution is create a large Areas-esque file, =systems.org=, that has subheadings devoted to Home, Digital, Transportation, etc., which are my ongoing spheres of activity. Headings within these areas can point to projects, instantiate recurring tasks, and so on. The =calendar.org= lists out yearly anniversaries I don’t want to forget, and =contacts.xxx= is a file that either will use =org-contacts= or revert to the powerful BBDB system. The final file =meta.org= has code that tracks tags throughout the =org= sytem.
+
+The thought here is that these four directories directly interact with the Agenda in certain ways or represent hard concerns of P.A.R.A.-based workflow. I’ve moved a bit away from GTD, except for contextual tagging and ticklers (setting tasks way into the future to remind me of something I want to do).
+
+Within my re-imagined home directory, the =library= sits /outside of/ the =org= directory proper, as it should. There are two reasons for this:
+
+1. I am moving to a server framework in which the “library” in its entirety sits on a private server, and local computers check out relevant portions of the library.
+2. The =org= directory is not synonymous with /all/ work I do or my /entire/ knowledge management system. The =org= directory reassumes real meaning with fewer files and more sensible subdirectories that directly reflect what I am doing with Org.
+
+In addition, projects (including writing, blogging, coding, curriculum development) are housed outside of the =org= structure. If something project-wise ossifies enough, it should enter the library or library archives, and =cpb=-based work should have been tracking its development all along.
+
+In this way, I’ve recapitulated the P.A.R.A. system (Projects - Areas (Hub) - Resources (Library) - Archives (Library Archives)) in a way that works for my workflow. I feel less burdened by having to update tons of files every day and can return to letting the Agenda tell me what needs to be done and where.
+
+*** Package Setup
+
+In setting up the =org-agenda package, *I’ve found it necessary to set =enable-local-variables= to nil* and simply run them on an as-needed basis. The reason is that when I run =emacs --daemon=, I get requests to run the variables. However, entering any value (=y=, =n=, =!=, etc.) simply causes the daemon process to hang.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-agenda
@@ -1010,35 +1044,12 @@ But ... what prevented me from taking this route of using recursion was that som
                                 (directory-files-recursively
                                  directory org-agenda-file-regexp))
                               '("~/org/captures/"
-                                "~/org/areas/"
+                                "~/org/hub/"
                                 "~/org/cpb/"
                                 "~/org/daybook"
                                 "~/.emacs.d/")))))
 #+END_SRC
 
-In case I need to return to the good ol’ days of listing all of the relevant directories, here they are:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (org-agenda-files (list
-                     "~/org/"
-                     "~/org/areas/business/"
-                     "~/org/areas/career/"
-                     "~/org/areas/digital/"
-                     "~/org/areas/finances/"
-                     "~/org/areas/food/"
-                     "~/org/areas/hiking/"
-                     "~/org/areas/home"
-                     "~/org/areas/self/"
-                     "~/org/areas/teaching/"
-                     "~/org/areas/writing/"
-                     "~/.emacs.d/"))
-#+END_SRC
-
-The method leaves out all of the project Org files stuck deeper in each Area, so these would need to be added manually on a case-by-case basis.
-
-*************** DONE [#A] Make org-agenda-files recursive for =~/org/areas/= :@digital:
-SCHEDULED: <2019-01-12 Sat>
-*************** END
 *** The Super Agenda
 
 I am currently using the package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] to provide nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
