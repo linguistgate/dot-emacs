@@ -1327,15 +1327,6 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
                                    :empty-lines 0                  ; properties
                                    :created t                      ; properties
                                    )
-                                  ("t"                             ; key
-                                   "scheduled task"                ; description
-                                   entry                           ; type
-                                   (file "~/org/areas/tasks.org"), ; target
-                                   owl/org-basic-task-template     ; template
-                                   :prepend nil                    ; properties
-                                   :empty-lines 0                  ; properties
-                                   :created t                      ; properties
-                                   )
                                   ("d" "daybook")
                                   ("dt"				
                                    "daybook task"
@@ -1373,16 +1364,10 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
                                    :empty-lines 0
                                    :created t
                                    )
-                                  ("j"
-                                   "journal entry"
-                                   entry
-                                   (function owl/org-journal-find-location)
-                                   "* TODO %(format-time-string org-journal-time-format)%^{Title} %^g\n%t\n"
-                                   :empty-lines 1)
                                   ("r"
                                    "recipe"
                                    entry
-                                   (file+headline "~/org/food.org" "Recipes")
+                                   (file+headline "~/org/cpb/food.org" "Recipes")
                                    "* TOCOOK %?\n:LOGBOOK:\n:CREATED: %U\n:END:\n:PROPERTIES:\n:SOURCE: \n:SERVES: \n:END:\n** Ingredients\n** Preparation"
                                    :prepend nil
                                    :empty-lines 0
@@ -1471,11 +1456,11 @@ Currently, I bind it to =C-c g= and focus only on the =captures.org= file and se
     :ensure t
     :bind ("C-c g" . org-randomnote)
     :config (setq org-randomnote-candidates '("~/org/captures/captures.org"
-                                              "~/org/areas/digital/digital.org"
-                                              "~/org/areas/hiking/survival.org"
-                                              "~/org/areas/writing/writing.org"
-                                              "~/org/notebook/reading.org"
-                                              "~/org/notebook/notebook.org"))
+                                              "~/org/hub/systems.org"
+                                              "~/org/cpb/journal.org"
+                                              "~/org/cpb/cs.org"
+                                              "~/org/cpb/reading.org"
+                                              "~/org/cpb/notebook.org"))
     )
 #+END_SRC
 
@@ -1544,7 +1529,7 @@ The capture block prompts for a task title, tag, and effort estimate; the tag is
 
 I was temporarily using =org-journal= as a way to capture daily tasks that don’t fall neatly into project cycles. I’m now trying to use it again ([2019-02-20 Wed]).
 
-Tasks in this set of files should be tasks that can be marked with a GTD tag (e.g., =@home=, =@errands=, etc.). In concert with project deadlines, recurring area deadlines (habits and things like oil changes), “tasks” are simply those items that don’t fall neatly into other categories. I create a separate directory, =~/org/areas/tasks=, which =org-journal= points to in creating day-by-day journal files. By default, =org-journal= will push tasks to the next day if they are not marked as complete. This satisfactorily replicates bullet journal practices and makes =org-journal= useful as a general GTD task organizer./ The =:custom= block establishes the location of the agenda and enforces =org-agenda= integration. /Changing the output file format has resulted in a number of bugs (i.e., non-carryover, non-automatic invocation of =Journal= mode, etc./
+Tasks in this set of files should be tasks that can be marked with a GTD tag (e.g., =@home=, =@errands=, etc.). In concert with project deadlines, recurring area deadlines (habits and things like oil changes), “tasks” are simply those items that don’t fall neatly into other categories. I created a separate directory, =~/org/areas/tasks=, which =org-journal= points to in creating day-by-day journal files. By default, =org-journal= will push tasks to the next day if they are not marked as complete. This satisfactorily replicates bullet journal practices and makes =org-journal= useful as a general GTD task organizer./ The =:custom= block establishes the location of the agenda and enforces =org-agenda= integration. /Changing the output file format has resulted in a number of bugs (i.e., non-carryover, non-automatic invocation of =Journal= mode, etc./
 
 #+BEGIN_EXAMPLE
   (use-package org-journal
