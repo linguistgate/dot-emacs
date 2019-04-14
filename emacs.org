@@ -1483,6 +1483,11 @@ In general, I feel like I need a better understanding of how my own needs fit in
    - I really like the idea of a =Commonplace Book= that mimics my Coleridgean needs in digital space. I don’t yet know how to deploy it sensibly, i.e., using a web server, publishing functions that create a static website, or other means.
    - I need to have a central hub that houses my =Antilibrary=. The antilibrary was once =media=. It’s now =resources=. But I think the true point is to house my own personal collection of documents, perhaps using a UUID system or similar. I have to be careful because the Antilibrary is not a library; it /should not/ be aimless hoarding; and it should be relatively navigable. I cannot store all the materials of the Antilibrary on my working laptop, so I need to find a centralized solution of a web server that I own. Various components of the Antilibrary should be “frozen,” encrypted, and uploaded to /relatively/ trustworthy offsite data storage facilities.
 
+[2019-04-14 Sun]
+I’ve moved out of the =Areas= model. There is now a “hub” (=~/org/hub=) with a central =systems.org= file that encapsulates Areas-esque needs (inventories, habits, recurring household chores, financials). Many parts of it are encrypted. The Commonplace Book idea is in full development now; I have a dedicated (=~/org/cpb=) directory that contains files to be used for notebooks, quotes, vocabulary, and digital scrapbooking.
+
+I’ve made a general move away from using =~/org= as the root node for everything. I’ve gone back to using the Linux home directory as the logical place to store relevant subsets of projects and resources that are checked out from my home server. The =~/org= directory proper handles agenda, capture, scrapbooking, journaling, and daybooking.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
     :defer t
