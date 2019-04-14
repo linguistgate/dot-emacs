@@ -116,10 +116,10 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#structure][Structure]]
     - [[#explanation-of-captures-cpb-daybook-hub][Explanation of Captures, CPB, Daybook, Hub]]
     - [[#package-setup][Package Setup]]
-    - [[#the-super-agenda][The Super Agenda]]
     - [[#the-set-of-todo-started-done-keywords][The Set of ~TODO-STARTED-DONE~ Keywords]]
       - [[#fast-todo-selection][Fast ‘TODO’ Selection]]
-    - [[#gtd-contexts][GTD Contexts]]
+    - [[#agenda-custom-commands][Agenda Custom Commands]]
+    - [[#the-super-agenda][The Super Agenda]]
   - [[#org-capture-and-refile][Org Capture and Refile]]
     - [[#capture-code-org-capture][Capture Code (=org-capture=)]]
     - [[#setting-some-refile-behaviors][Setting some Refile behaviors]]
@@ -127,6 +127,7 @@ Literate programming is human-centric in the sense that programming code is "tan
     - [[#clock][Clock]]
   - [[#org-journal-as-task-daybook-org-journal][Org Journal as Task Daybook (=org-journal=)]]
     - [[#comment][COMMENT]]
+    - [[#comment-1][COMMENT]]
   - [[#habits-org-habit][Habits (=org-habit=)]]
   - [[#contacts-org-contacts][Contacts (=org-contacts=)]]
     - [[#rant][Rant]]
@@ -1049,11 +1050,120 @@ In setting up the =org-agenda package, *I’ve found it necessary to set =enable
                                 "~/.emacs.d/")))))
 #+END_SRC
 
-*** The Super Agenda
+*** The Set of ~TODO-STARTED-DONE~ Keywords
 
-I am currently using the package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] to provide nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
+I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
 
 #+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                (sequence "NOTE(n)" "IDEA(i)" "|" "FUTURE(f)")
+                (sequence "TOREAD(tr)" "|" "FINISHED-READING(fr)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
+
+#+END_SRC
+
+In order for dependencies among these keywords to work, triggers must be imposed (see [[http://doc.norang.ca/org-mode.html][Bert Hansen's well-known org-mode setup]] for a diagram of state transitions).
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+#+END_SRC
+
+**** Fast ‘TODO’ Selection
+
+ Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-use-fast-todo-selection t)
+#+END_SRC
+ 
+Changing a task state is done with C-c C-t KEY
+
+where KEY is the appropriate fast todo state selection key as defined in org-todo-keywords.
+
+The setting
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+#+END_SRC
+
+allows changing todo states with S-left and S-right skipping all of the normal processing when entering or leaving a todo state. This cycles through the todo states but skips setting timestamps and entering notes which is very convenient when all you want to do is fix up the status of an entry. 
+*** Agenda Custom Commands
+
+I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-agenda-custom-commands
+        '(("g" . "Areas")
+          ("gd" "Digital" tags-todo "@digital")
+          ("ge" "Email" tags-todo "@email")
+          ("gf" "Food" tags-todo "@food")
+          ("gm" "Financial" tags-todo "@financial")
+          ("gr" "Reading" tags-todo "@reading")
+          ("gw" "Writing" tags-todo "@writing")
+          ("G" "Areas Block Agenda"
+           ((tags-todo "@digital")
+            (tags-todo "@email")
+            (tags-todo "@financial")
+            (tags-todo "@reading"))
+           nil                                              ;; i.e., no local settings
+           ("~/publishing/private_html/next-actions.html")) ;; exports block to this file with C-c a e
+          ("D" "Daybook Block Agenda"
+           ((agenda "" ((org-agenda-span 1)
+                        (org-agenda-entry-types '(:timestamp :sexp :scheduled :deadline :journal))))               ;; limits the agenda display to a single day
+            (tags-todo "+PRIORITY=\"A\"")
+            (tags-todo "@email|@phone|@message")
+            (tags "project+CATEGORY=\"elephants\"")
+            ))))
+
+  (setq org-tag-alist '(("@home" . ?h)
+                        ("@office" . ?o)
+                        ("@email" . ?e)
+                        ("@career" . ?c)
+                        ("@digital" .?d)
+                        ("@financial" . ?m)
+                        ("@phone" . ?p)
+                        ("@reading" . ?r)
+                        ("@writing" . ?w)
+                        ("@self" . ?s)))
+#+END_SRC
+
+*** The Super Agenda
+**** COMMENT Currently out
+
+The package [[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] provides nicer formatting and lots of opportunities for ordering by context, tag, and so on. To keep it persistent, it needs to be set with =setq=.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package org-super-agenda
+    :init (org-super-agenda-mode)
+    :config (setq org-super-agenda-groups
+                  '((:log t)
+                    (:name "Today"
+                           :scheduled today)
+                    (:name "Important"
+                           :priority "A")
+                    (:name "Daybook"
+                           :tag "@daybook")
+                    (:habit t)
+                    (:name "Due today"
+                           :deadline today)
+                    (:name "Overdue"
+                           :deadline past)
+                    (:name "Due soon"
+                           :deadline future)
+                    (:name "Books to read"
+                           :and (:todo "TOREAD" :tag "@reading"))
+                    (:discard (:anything t)))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq
    org-agenda-custom-commands
    ;; Setting here instead of in custom-set-variables so I can preserve the comments
@@ -1165,118 +1275,6 @@ I am currently using the package [[https://github.com/alphapapa/org-super-agenda
       ((org-agenda-todo-ignore-scheduled 'future)
        (org-agenda-sorting-strategy '(deadline-up)))))))
 #+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package org-super-agenda
-    :init (org-super-agenda-mode)
-    :config (setq org-super-agenda-groups
-                  '((:log t)
-                    (:name "Today"
-                           :scheduled today)
-                    (:name "Important"
-                           :priority "A")
-                    (:name "Daybook"
-                           :tag "@daybook")
-                    (:habit t)
-                    (:name "Due today"
-                           :deadline today)
-                    (:name "Overdue"
-                           :deadline past)
-                    (:name "Due soon"
-                           :deadline future)
-                    (:name "Books to read"
-                           :and (:todo "TOREAD" :tag "@reading"))
-                    (:discard (:anything t)))))
-#+END_SRC
-
-*** The Set of ~TODO-STARTED-DONE~ Keywords
-
-I follow a basic system of =TODO= keywords: =TODO=, =STARTED=, =NEXT=, and =DONE=. For archiving purposes, there is also =CANCELED= (spelled with one ‘l’):
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                (sequence "NOTE(n)" "IDEA(i)" "|" "FUTURE(f)")
-                (sequence "TOREAD(tr)" "|" "FINISHED-READING(fr)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "MEETING"))))
-
-#+END_SRC
-
-In order for dependencies among these keywords to work, triggers must be imposed (see [[http://doc.norang.ca/org-mode.html][Bert Hansen's well-known org-mode setup]] for a diagram of state transitions).
-
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-state-tags-triggers
-      (quote (("CANCELLED" ("CANCELLED" . t))
-              ("WAITING" ("WAITING" . t))
-              ("HOLD" ("WAITING") ("HOLD" . t))
-              (done ("WAITING") ("HOLD"))
-              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-#+END_SRC
-
-**** Fast ‘TODO’ Selection
-
- Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu.
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-use-fast-todo-selection t)
-#+END_SRC
- 
-Changing a task state is done with C-c C-t KEY
-
-where KEY is the appropriate fast todo state selection key as defined in org-todo-keywords.
-
-The setting
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-#+END_SRC
-
-allows changing todo states with S-left and S-right skipping all of the normal processing when entering or leaving a todo state. This cycles through the todo states but skips setting timestamps and entering notes which is very convenient when all you want to do is fix up the status of an entry. 
-
-*** GTD Contexts
-
-I use some of the insights of the GTD system as well Tiago Forte's PARA system. To implement this in the agenda, I use a GTD "contexts" system, defined here:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (setq org-agenda-custom-commands
-        '(("g" . "GTD contexts")
-          ("gc" "Career" tags-todo "@career")
-          ("gd" "Digital" tags-todo "@digital")
-          ("ge" "Email" tags-todo "@email")
-          ("gf" "Food" tags-todo "@food")
-          ("gh" "Home" tags-todo "@home")
-          ("gm" "Financial" tags-todo "@financial")
-          ("gn" "Notebook" tags-todo "@notes")
-          ("go" "Office" tags-todo "@office")
-          ("gr" "Reading" tags-todo "@reading")
-          ("gs" "Self" tags-todo "@self")
-          ("gw" "Writing" tags-todo "@writing")
-          ("G" "GTD Block Agenda"
-           ((tags-todo "@office")
-            (tags-todo "@digital")
-            (tags-todo "@email")
-            (tags-todo "@home")
-            (tags-todo "@financial")
-            (tags-todo "@career")
-            (tags-todo "@reading")
-            (tags-todo "@self")
-            (tags-todo "@writing"))
-           nil                      ;; i.e., no local settings
-           ("~/private-html/next-actions.html")) ;; exports block to this file with C-c a e
-          ))
-
-  (setq org-tag-alist '(("@home" . ?h)
-                        ("@office" . ?o)
-                        ("@email" . ?e)
-                        ("@career" . ?c)
-                        ("@digital" .?d)
-                        ("@financial" . ?m)
-                        ("@reading" . ?r)
-                        ("@writing" . ?w)
-                        ("@self" . ?s)))
-#+END_SRC
 ** Org Capture and Refile
 
 Org-mode capture templates allow for central implementations of the PARA/BASB concept, as envisioned by Tiago Forte.
@@ -1295,20 +1293,20 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
       "Template for basic task.")
 
     (defvar owl/org-daybook-task-template
-      "* TODO [#B] %(format-time-string org-journal-time-format)%^{Task} %^g\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
-      "Template for basic daybook task entry.")
+      "* TODO %^{Task} %^g\n%^T\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
+      "Template for basic daybook task entry. No time indicator for time of entry; prompt for scheduled time/date.")
 
     (defvar owl/org-daybook-entry-template
       "* NOTE %(format-time-string org-journal-time-format)%^{Title} %^g\n:PROPERTIES:\n:Created: %U\n:END:\n%?"
       "Template for basic daybook journal entry.")
 
     (defvar owl/org-contacts-template "* %(org-contacts-template-name)
-                      :PROPERTIES:
-                      :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
-                      :BIRTHDAY: %^{yyyy-mm-dd}
-                      :EMAIL: %(org-contacts-template-email)
-                      :NOTE: %^{NOTE}
-                      :END:" "Template for org-contacts.")
+                        :PROPERTIES:
+                        :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+                        :BIRTHDAY: %^{yyyy-mm-dd}
+                        :EMAIL: %(org-contacts-template-email)
+                        :NOTE: %^{NOTE}
+                        :END:" "Template for org-contacts.")
 
     (defun owl/org-journal-find-location ()
       ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -1469,35 +1467,32 @@ Currently, I bind it to =C-c g= and focus only on the =captures.org= file and se
 
 The directory =~/org/daybook= holds a set of short diary files that together comprise a bullet-journal-esque daybook.
 
-I’ve had problems in the past rolling this out (see Comment below), but I am trying it again as I despise the =tasks.org= file that is once again becoming a catch-all when I don’t know where to put a task in an “Area.”
-
-(In general I feel that running notebooks and daybooks are preferable to vastly dispersed Area files. Area files should largely be command structures for spheres of ongoing activity, including the most common files that undergird these activities. In any case, an “Area” is an abstract concept and can be instantiated via a GTD tag.)
-
-[2019-03-03 Sun]
-In general, I feel like I need a better understanding of how my own needs fit in with, and deviate from, P.A.R.A.:
-
-   - In the interest of cloud-based backup solutions, there’s a problem with situating Project folders within Areas because of the possibly large disk memory size and the need to use various =.ignore= files to ease the burden on syncing.
-   - I don’t like the term “Areas,” but it’s better than “Admin.” It’s probably better than “Sphere.”
-   - As with all modern organization systems, there’s an inherent tension between tagging/flatness and directories/recursion. I personally dislike directories full of huge files that have a tagging system invisible to me without the aid of, say, an Org file. But at the same time, deep recursion is silly.
-   - I really like the idea of =Areas= as zones where I track expenses, fitness, home inventories, digital setups, an the like.
-   - I really like the idea of a =Commonplace Book= that mimics my Coleridgean needs in digital space. I don’t yet know how to deploy it sensibly, i.e., using a web server, publishing functions that create a static website, or other means.
-   - I need to have a central hub that houses my =Antilibrary=. The antilibrary was once =media=. It’s now =resources=. But I think the true point is to house my own personal collection of documents, perhaps using a UUID system or similar. I have to be careful because the Antilibrary is not a library; it /should not/ be aimless hoarding; and it should be relatively navigable. I cannot store all the materials of the Antilibrary on my working laptop, so I need to find a centralized solution of a web server that I own. Various components of the Antilibrary should be “frozen,” encrypted, and uploaded to /relatively/ trustworthy offsite data storage facilities.
-
-[2019-04-14 Sun]
-I’ve moved out of the =Areas= model. There is now a “hub” (=~/org/hub=) with a central =systems.org= file that encapsulates Areas-esque needs (inventories, habits, recurring household chores, financials). Many parts of it are encrypted. The Commonplace Book idea is in full development now; I have a dedicated (=~/org/cpb=) directory that contains files to be used for notebooks, quotes, vocabulary, and digital scrapbooking.
-
-I’ve made a general move away from using =~/org= as the root node for everything. I’ve gone back to using the Linux home directory as the logical place to store relevant subsets of projects and resources that are checked out from my home server. The =~/org= directory proper handles agenda, capture, scrapbooking, journaling, and daybooking.
-
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal
     :defer t
     :custom
     (org-journal-dir "~/org/daybook/")                                                             ; location
-    (org-journal-date-format "%A, %d %B %Y")                                                       ; date name format
+    (org-journal-date-format "%A, %x")                                                             ; date name format
     (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"NEXT\"|TODO=\"WAITING\"")  ; carryover items
+    (org-journal-file-type 'daily)                                                                 ; stores in daily files
     (org-journal-enable-agenda-integration t)                                                      ; ensure entries are on the agenda
     )
   (org-journal-update-auto-mode-alist)
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-journal-date-format-func (time)
+    "Custom function to insert journal date header,
+  and some custom text on a newly created journal file."
+    (when (= (buffer-size) 0)
+      (insert
+       (pcase org-journal-file-type
+         (`daily "#+TITLE: Daily Journal")
+         (`weekly "#+TITLE: Weekly Journal")
+         (`monthly "#+TITLE: Monthly Journal")
+         (`yearly "#+TITLE: Yearly Journal"))))
+    (concat org-journal-date-prefix (format-time-string "%A, %x" time)))
 
 #+END_SRC
 
@@ -1529,6 +1524,27 @@ The capture block prompts for a task title, tag, and effort estimate; the tag is
      owl/org-basic-daybook-template     ; template
      :empty-lines 1)
 #+END_EXAMPLE
+
+*** COMMENT
+
+I’ve had problems in the past rolling this out (see Comment below), but I am trying it again as I despise the =tasks.org= file that is once again becoming a catch-all when I don’t know where to put a task in an “Area.”
+
+(In general I feel that running notebooks and daybooks are preferable to vastly dispersed Area files. Area files should largely be command structures for spheres of ongoing activity, including the most common files that undergird these activities. In any case, an “Area” is an abstract concept and can be instantiated via a GTD tag.)
+
+[2019-03-03 Sun]
+In general, I feel like I need a better understanding of how my own needs fit in with, and deviate from, P.A.R.A.:
+
+   - In the interest of cloud-based backup solutions, there’s a problem with situating Project folders within Areas because of the possibly large disk memory size and the need to use various =.ignore= files to ease the burden on syncing.
+   - I don’t like the term “Areas,” but it’s better than “Admin.” It’s probably better than “Sphere.”
+   - As with all modern organization systems, there’s an inherent tension between tagging/flatness and directories/recursion. I personally dislike directories full of huge files that have a tagging system invisible to me without the aid of, say, an Org file. But at the same time, deep recursion is silly.
+   - I really like the idea of =Areas= as zones where I track expenses, fitness, home inventories, digital setups, an the like.
+   - I really like the idea of a =Commonplace Book= that mimics my Coleridgean needs in digital space. I don’t yet know how to deploy it sensibly, i.e., using a web server, publishing functions that create a static website, or other means.
+   - I need to have a central hub that houses my =Antilibrary=. The antilibrary was once =media=. It’s now =resources=. But I think the true point is to house my own personal collection of documents, perhaps using a UUID system or similar. I have to be careful because the Antilibrary is not a library; it /should not/ be aimless hoarding; and it should be relatively navigable. I cannot store all the materials of the Antilibrary on my working laptop, so I need to find a centralized solution of a web server that I own. Various components of the Antilibrary should be “frozen,” encrypted, and uploaded to /relatively/ trustworthy offsite data storage facilities.
+
+[2019-04-14 Sun]
+I’ve moved out of the =Areas= model. There is now a “hub” (=~/org/hub=) with a central =systems.org= file that encapsulates Areas-esque needs (inventories, habits, recurring household chores, financials). Many parts of it are encrypted. The Commonplace Book idea is in full development now; I have a dedicated (=~/org/cpb=) directory that contains files to be used for notebooks, quotes, vocabulary, and digital scrapbooking.
+
+I’ve made a general move away from using =~/org= as the root node for everything. I’ve gone back to using the Linux home directory as the logical place to store relevant subsets of projects and resources that are checked out from my home server. The =~/org= directory proper handles agenda, capture, scrapbooking, journaling, and daybooking.
 
 *** COMMENT
 
