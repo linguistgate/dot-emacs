@@ -1045,7 +1045,7 @@ In setting up the =org-agenda package, *I’ve found it necessary to set =enable
                               '("~/org/captures/"
                                 "~/org/hub/"
                                 "~/org/cpb/"
-                                "~/org/daybook"
+                                "~/org/daybook/"
                                 "~/.emacs.d/")))))
 #+END_SRC
 
@@ -1295,7 +1295,7 @@ Org-mode capture templates allow for central implementations of the PARA/BASB co
       "Template for basic task.")
 
     (defvar owl/org-daybook-task-template
-      "* TODO [#B] %(format-time-string org-journal-time-format)%^{Task} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
+      "* TODO [#B] %(format-time-string org-journal-time-format)%^{Task} %^g\n:PROPERTIES:\n:Created: %U\n:Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n:END:"
       "Template for basic daybook task entry.")
 
     (defvar owl/org-daybook-entry-template
