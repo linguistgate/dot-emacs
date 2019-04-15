@@ -1702,9 +1702,9 @@ I want the CSS to be rendered using Tufte, so we’ll see how this all pans out 
 #+BEGIN_SRC emacs-lisp
   (setq org-static-blog-publish-title "phantisocracy.xyz")
   (setq org-static-blog-publish-url "http://www.phantisocracy.xyz")
-  (setq org-static-blog-publish-directory "~/org/publishing/phantisocracy/")
-  (setq org-static-blog-posts-directory "~/org/publishing/phantisocracy/posts/")
-  (setq org-static-blog-drafts-directory "~/org/publishing/phantisocracy/drafts/")
+  (setq org-static-blog-publish-directory "~/publishing/phantisocracy/")
+  (setq org-static-blog-posts-directory "~/publishing/phantisocracy/posts/")
+  (setq org-static-blog-drafts-directory "~/publishing/phantisocracy/drafts/")
   (setq org-static-blog-enable-tags t)
   (setq org-export-with-toc nil)
   (setq org-export-with-section-numbers nil)
