@@ -1961,7 +1961,7 @@ It's possible to think of this in terms of the main =poet-theme= and some well-e
 
 I’m using the [[https://github.com/gareth-rees/smart-quotes][smart-quotes package]] that Gareth Rees put together. It displays ~‘ “ ”~ in text-mode environments (which I’ve automatically activated via hook).
 
-I’m not super sure I’ll want this package around forever. It’s not on MELPA but does a decent job giving me “smart quotes” à la WYSIWYG processing, similar to how quotes are entered manually in LaTeX.
+I’m not super sure I’ll want this package around forever. *It’s not on MELPA* [2019-04-14 Sun] but does a decent job giving me “smart quotes” à la WYSIWYG processing, similar to how quotes are entered manually in LaTeX.
 
 I’m a little leery about strings such as ~I’m~ replacing ~I'm~, for example. It's likely a misplaced worry for text files consisting of prose. Exporting seems to perform well for HTML, PDF (via =pdflatex= engine), and ODT. 
 
